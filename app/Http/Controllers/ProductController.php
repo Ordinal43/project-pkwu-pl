@@ -76,7 +76,7 @@ class ProductController extends Controller
     }
 
 
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $product)
     {
         // $data = $request->only(['name', 'description', 'units', 'price', 'stand_id']);
         // $data['image'] = $this->uploadImage($request, $product->image);

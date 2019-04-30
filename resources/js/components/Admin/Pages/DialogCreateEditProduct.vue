@@ -31,7 +31,7 @@
 
                 <p v-show="!!errorText" class="red--text">{{ errorText }}</p>
 
-                <v-btn color="primary" flat @click="pickFile" v-if="!productId">
+                <v-btn color="primary" flat @click="pickFile">
                     Upload Gambar
                 </v-btn>
                 
@@ -158,7 +158,9 @@ export default {
                 data.append(`price`, this.price); 
                 data.append(`units`, this.stock);
                 data.append(`description`, this.description);
-                data.append(`image`, this.fileBin); 
+                if(this.fileBin) {
+                    data.append(`image`, this.fileBin);
+                }
                 data.append(`stand_id`, this.stand); 
                 
                 try {
@@ -169,12 +171,10 @@ export default {
                             }
                         });
                     } else {
-                        const res = await axios.patch(`/api/products/${this.productId}`, {
-                            name: this.name,
-                            description: this.description,
-                            units: this.stock,
-                            price: this.price,
-                            stand_id: this.stand
+                        const res = await axios.post(`/api/products/${this.productId}`, data, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
                         });
                     }
                     this.$emit('create_success');   
