@@ -70,26 +70,16 @@ class ProductController extends Controller
         return '';
     }
 
-    /**
-     * @param Product $product
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function show(Product $product)
     {
         return response()-> json($product,200);
     }
 
-    /**
-     * Update a product from storage.
-     *
-     * @param Request $request
-     * @param Product $product
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function update(Request $request, Product $product)
     {
         $data = $request->only(['name', 'description', 'units', 'price', 'stand_id']);
-        // $data['image'] = $this->uploadImage($request, $product->image);
+        $data['image'] = $this->uploadImage($request, $product->image);
 
         $status = $product->update($data);
 
