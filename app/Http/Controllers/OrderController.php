@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Product;
 use App\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -86,17 +87,17 @@ class OrderController extends Controller
     public function destroy(Order $order)
     {
 
-        DB::transaction(function () use ($request, &$order) {
+         $status = DB::transaction(function () use ($order) {
             
                 $product = Product::find($order['product_id']);
                 $product->units += $order['quantity'];
                 $product->save();
-                $status = $order->delete();
+                $order->delete();
             
         }, 3);
 
         return response()->json([
-            'status' => $status,
+            'status' => (bool )$status,
             'message' => $status ? 'Order Deleted!' : 'Error Deleting Order'
         ]);
     }
