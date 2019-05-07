@@ -70,6 +70,18 @@
                             <td class="text-xs-right">{{ props.item.qty }}</td>
                             <td class="text-xs-right">{{ $rupiahFormat(props.item.price) }}</td>
                             <td class="text-xs-right">{{ $rupiahFormat(props.item.total) }}</td>
+                            <td>
+                                <v-tooltip bottom>
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn icon flat color="red" slot="activator" v-on="on" 
+                                        @click="cancelTransaction(props.item)"
+                                        >
+                                            <v-icon>delete</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <span>Hapus</span>
+                                </v-tooltip>
+                            </td>
                         </template>
                     </v-data-table>
                 </v-card>
@@ -136,6 +148,7 @@ export default {
             { text: 'Jumlah', value: 'qty' },
             { text: 'Harga', value: 'price' },
             { text: 'Total', value: 'total' },
+            { text: 'Action', value: 'total', sortable: false },
         ],
         items: [],
         dialogTransactionDetail: false,
@@ -171,6 +184,33 @@ export default {
             }
             this.loading = false;
         },
+        async cancelTransaction(item) {
+            const willDelete = await swal({
+                title: `Yakin ingin menghapus item ${item.id}?`,
+                icon: "warning",
+                closeOnClickOutside: false,
+                buttons: {
+                    cancel: {
+                        text: "TIDAK",
+                        value: false,
+                        visible: true,
+                        closeModal: true,
+                    },
+                    confirm: {
+                        text: "YA",
+                        value: true,
+                        visible: true,
+                        closeModal: true
+                    }
+                }
+            })
+
+            if(willDelete) {
+                // axios.delete(`/api/order/${item.id}`)
+                // .then(res)
+            }
+            
+        },
         printOrders() {
             this.$htmlToPaper('printMe');
         },
@@ -180,4 +220,3 @@ export default {
     }
 }
 </script>
-
