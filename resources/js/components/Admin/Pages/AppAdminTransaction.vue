@@ -206,8 +206,12 @@ export default {
             })
 
             if(willDelete) {
-                // axios.delete(`/api/order/${item.id}`)
-                // .then(res)
+                try {
+                    const res = await axios.delete(`/api/orders/${item.id}`);
+                    alert("Berhasil dihapus");
+                } catch (err) {
+                    console.log(err);
+                }
             }
             
         },
