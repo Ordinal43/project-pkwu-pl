@@ -89,9 +89,7 @@ class ProductController extends Controller
         $status->units = $request['units'];
         $status->price = $request['price'];
         $status->stand_id = $request['stand_id'];
-        if($request->hasFile('image')) {
-            $status->image= $this->uploadImage($request);
-        }
+        $status->image= $this->uploadImage($request);
         $status->update();
 
         return response()->json([

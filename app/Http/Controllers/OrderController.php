@@ -85,7 +85,15 @@ class OrderController extends Controller
   
     public function destroy(Order $order)
     {
-        $status = $order->delete();
+
+        DB::transaction(function () use ($request, &$order) {
+            
+                $product = Product::find($order['product_id']);
+                $product->units += $order['quantity'];
+                $product->save();
+                $status = $order->delete();
+            
+        }, 3);
 
         return response()->json([
             'status' => $status,
