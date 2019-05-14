@@ -34,7 +34,7 @@ class UserController extends Controller
         {
             $validator = Validator::make($request->all(), [
                 'name' => 'required|max:50',
-                'email' => 'required|email',
+                'email' => 'required|unique:users',
                 'password' => 'required|min:6',
                 'c_password' => 'required|same:password',
             ]);
@@ -51,7 +51,7 @@ class UserController extends Controller
 
             return response()->json([
                 'user' => $user,
-                'token' => $user->createToken('bigStore')->accessToken,
+                'token' => $user->createToken('bazaar')->accessToken,
             ]);
         }
 
