@@ -41,7 +41,6 @@
     </v-app>
 </template>
 <script>
-import { mapActions } from 'vuex'
 
 export default {
     data: () => ({
@@ -60,12 +59,10 @@ export default {
         ],
     }),
     methods: {
-        ...mapActions([
-            'logoutRequest'
-        ]),
         async logout() {
             try {
-                await this.logoutRequest()
+                await this.$user.logout();
+                this.$user.clearStorage();
                 this.$router.replace({path: "/login"})
             } catch (err) {
                 alert(err);

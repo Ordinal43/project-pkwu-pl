@@ -31,6 +31,9 @@ Vue.prototype.$rupiahFormat = function(value) {
     )
 }
 
+import User from './helpers/User'
+Vue.prototype.$user = User;
+
 // vue sweet-alert
 import VueSwal from 'vue-swal'
  

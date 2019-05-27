@@ -5,7 +5,7 @@
                 <v-layout row wrap justify-center align-center>
                     <v-flex xs12 md9 style="max-width: 600px">
                         <v-card elevation-10>
-                        <v-form ref="login_form" @submit.prevent="login">
+                        <v-form ref="login_form" @submit.prevent="register">
                             <v-card-text>
                                 <v-text-field
                                     label="Nama"
@@ -70,24 +70,20 @@ export default {
         },
     }),
     methods: {
-        async login() {
+        async register() {
             if(this.$refs.login_form.validate()) {
                 this.loading = true
                 try {
-                    console.log(this.username, this.password);
-                    const res = await axios.post('/api/register', {
+                    const request = {
                         name: this.name,
                         email: this.email,
                         password: this.password,
                         c_password: this.cpassword,
-                    });
+                    };
 
-                    if(!!res.data.error) {
-                        alert(res.data.error)
-                    } else {
-                        this.$router.replace({path: "/admin"});
-                    }
-                    
+                    const res = await this.$user.signup(request)
+                    await this.$user.storeSession(res.data)
+                    this.$router.replace({path: "/admin"});
                 } catch (error) {
                     alert(error);
                 }

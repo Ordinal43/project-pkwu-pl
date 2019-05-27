@@ -8,8 +8,8 @@
                         <v-form ref="login_form" @submit.prevent="login">
                             <v-card-text>
                                 <v-text-field
-                                    label="Username"
-                                    v-model="username"
+                                    label="Email"
+                                    v-model="email"
                                     type="text"
                                     :rules="[v => !!v || 'Harus diisi']"
                                 ></v-text-field>
@@ -42,11 +42,9 @@
     </v-app>
 </template>
 <script>
-import { mapActions } from 'vuex'
-
 export default {
     data: () => ({
-        username: null,
+        email: null,
         password: null,
         loading: false,
     }),
@@ -55,22 +53,19 @@ export default {
             if(this.$refs.login_form.validate()) {
                 this.loading = true
                 try {
-                    console.log(this.username, this.password);
-                    
-                    await this.loginRequest({
-                        user: this.username, 
-                        pass: this.password
-                    });
-                    this.$router.replace({path: "/admin"});
+                    const request = {
+                        email: this.email, 
+                        password: this.password
+                    }
+                    const res = await this.$user.login(request);
+                    await this.$user.storeSession(res.data);
+                    this.$router.replace({path: "/admin"});  
                 } catch (error) {
                     alert(error);
                 }
                 this.loading = false
             }
         },
-        ...mapActions([
-            'loginRequest'
-        ])
     },
 }
 </script>
