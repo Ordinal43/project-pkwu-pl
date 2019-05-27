@@ -13,6 +13,8 @@ import AppStand from './components/Customer/AppStand'
 
 // Admin Pages
 import AppLogin from './components/Admin/AppLogin'
+import AppRegister from './components/Admin/AppRegister'
+
 import AppDashboard from './components/Admin/AppDashboard'
 
 import AppAdminStand from './components/Admin/Pages/AppAdminStand'
@@ -36,6 +38,7 @@ const routes = [
         path:'/admin', component: RootAdmin,
         children: [
             { path: '/login', component: AppLogin },
+            { path: '/register', component: AppRegister },
             { path: '/admin', component: AppDashboard,
                 children: [
                     { path: '/admin', redirect: 'stands' },

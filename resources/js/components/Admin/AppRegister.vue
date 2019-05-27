@@ -8,16 +8,28 @@
                         <v-form ref="login_form" @submit.prevent="login">
                             <v-card-text>
                                 <v-text-field
-                                    label="Username"
-                                    v-model="username"
+                                    label="Nama"
+                                    v-model="name"
                                     type="text"
-                                    :rules="[v => !!v || 'Harus diisi']"
+                                    :rules="[rules.required]"
+                                ></v-text-field>
+                                <v-text-field
+                                    label="Email"
+                                    v-model="email"
+                                    type="text"
+                                    :rules="[rules.required, rules.email]"
                                 ></v-text-field>
                                 <v-text-field
                                     label="Password"
                                     v-model="password"
                                     type="password"
-                                    :rules="[v => !!v || 'Harus diisi']"
+                                    :rules="[rules.required, rules.password]"
+                                ></v-text-field>
+                                <v-text-field
+                                    label="Konfirmasi Password"
+                                    v-model="cpassword"
+                                    type="password"
+                                    :rules="[rules.required, rules.password]"
                                 ></v-text-field>
                             </v-card-text>
                             <v-card-text class="text-xs-center">
@@ -25,12 +37,12 @@
                                     :loading="loading"
                                     outline round large type="submit"
                                 >
-                                    Login
+                                    Daftar
                                 </v-btn>
                             </v-card-text>
                             <v-card-text class="text-xs-center">
-                                <v-btn color="grey" small round outline to="/register">
-                                    daftar
+                                <v-btn color="grey" small round outline to="/login">
+                                    masuk
                                 </v-btn>
                             </v-card-text>
                         </v-form>
@@ -42,13 +54,20 @@
     </v-app>
 </template>
 <script>
-import { mapActions } from 'vuex'
 
 export default {
     data: () => ({
-        username: null,
+        name: null,
+        email: null,
         password: null,
+        cpassword: null,
         loading: false,
+
+        rules: {
+            required: v => !!v || 'Harus diisi',
+            email: v => /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v) || 'E-mail tidak valid',
+            password: v => String(v).length >= 6 || 'Password minimal 6 karakter',
+        },
     }),
     methods: {
         async login() {
@@ -56,21 +75,25 @@ export default {
                 this.loading = true
                 try {
                     console.log(this.username, this.password);
-                    
-                    await this.loginRequest({
-                        user: this.username, 
-                        pass: this.password
+                    const res = await axios.post('/api/register', {
+                        name: this.name,
+                        email: this.email,
+                        password: this.password,
+                        c_password: this.cpassword,
                     });
-                    this.$router.replace({path: "/admin"});
+
+                    if(!!res.data.error) {
+                        alert(res.data.error)
+                    } else {
+                        this.$router.replace({path: "/admin"});
+                    }
+                    
                 } catch (error) {
                     alert(error);
                 }
                 this.loading = false
             }
         },
-        ...mapActions([
-            'loginRequest'
-        ])
     },
 }
 </script>
