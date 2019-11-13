@@ -1,9 +1,15 @@
 <template>
     <v-app>
-        <v-toolbar app dense clipped-left>
+        <v-toolbar app clipped-left>
             <v-toolbar-side-icon
                 @click.stop="drawer = !drawer"
             ></v-toolbar-side-icon>
+            <v-spacer></v-spacer>
+            <span 
+                class="title text-xs-center overflow-text"
+            >
+                Hello, {{ $user.info().name }}
+            </span>
         </v-toolbar>
         <v-navigation-drawer app clipped v-model="drawer">
             <v-list>
@@ -62,7 +68,6 @@ export default {
         async logout() {
             try {
                 await this.$user.logout();
-                this.$user.clearStorage();
                 this.$router.replace({path: "/login"})
             } catch (err) {
                 alert(err);

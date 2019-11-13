@@ -53,13 +53,10 @@ class User {
         // });
         return new Promise((resolve, reject) => {
             setTimeout(() => {
+                AppStorage.clear();
                 resolve();
             }, 500);
         })
-    }
-    
-    clearStorage() {
-        AppStorage.clear();
     }
 
     info(){
