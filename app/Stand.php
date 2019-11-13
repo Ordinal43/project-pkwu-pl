@@ -10,7 +10,7 @@ class Stand extends Model
 {
     use SoftDeletes;
     protected $fillable = [
-        'name',        
+        'stand_name',        
         'description',
         'user_id',
     ];
