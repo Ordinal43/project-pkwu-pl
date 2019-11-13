@@ -80,6 +80,11 @@ router.beforeEach(async (to, from, next) => {
             next({path: '/login', replace: true})
             return
         }
+    } else {
+        if(User.loggedIn()) {
+            next({path: '/backend', replace: true})
+            return
+        }
     }
     
     if(to.path === "/login" || to.path === "/register") {
