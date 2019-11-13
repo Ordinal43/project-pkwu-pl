@@ -49,12 +49,12 @@ export default {
             {
                 icon: "store_mall_directory",
                 title: "Stand",
-                route: "/admin/stands",
+                route: "/backend/stands",
             },
             {
                 icon: "receipt",
                 title: "Transaksi",
-                route: "/admin/transactions",
+                route: "/backend/transactions",
             },
         ],
     }),

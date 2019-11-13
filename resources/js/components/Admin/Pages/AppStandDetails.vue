@@ -12,7 +12,7 @@
         </v-layout>
         <div v-show="!loading">
             <v-layout row align-center>
-                <v-btn fab dark color="primary" to="/admin/stands">
+                <v-btn fab dark color="primary" to="/backend/stands">
                     <v-icon>arrow_back</v-icon>
                 </v-btn>
                 <div class="ml-4">
