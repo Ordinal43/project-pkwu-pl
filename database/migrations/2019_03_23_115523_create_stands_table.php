@@ -11,7 +11,7 @@ class CreateStandsTable extends Migration
     {
         Schema::create('stands', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
+            $table->string('stand_name');
             $table->string('description');
             $table->unsignedInteger('user_id');
             $table->softDeletes();
