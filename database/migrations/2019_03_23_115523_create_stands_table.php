@@ -13,6 +13,7 @@ class CreateStandsTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('description');
+            $table->unsignedInteger('user_id');
             $table->softDeletes();
             $table->timestamps();
         });

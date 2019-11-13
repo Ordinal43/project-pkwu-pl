@@ -16,7 +16,6 @@ class User extends Authenticatable
         'name', 'email', 'password',
     ];
 
-  
     protected $hidden = [
         'password', 'remember_token',
     ];
@@ -24,4 +23,9 @@ class User extends Authenticatable
     public function orders(){
         return $this->hasMany(Order::class);
     }
+
+    public function stands(){
+        return $this->hasOne(Stand::class);
+    }
+
 }

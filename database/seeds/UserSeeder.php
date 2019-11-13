@@ -9,14 +9,11 @@ class UserSeeder extends Seeder
     public function run()
     {
         $faker = Faker\Factory::create();
-
-       
-           User::create([
-               'name' => $faker->name,
-               'email' => $faker->email,
-               'password' => 'secret',
-
-           ]);
-       
+            User::create([
+               'name' => 'admin',
+               'email' => 'admin@mail.com',
+               'password' => Hash::make('@Admin123'),
+               'is_admin' => true,
+        ]);
     }
 }

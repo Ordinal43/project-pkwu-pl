@@ -1,4 +1,16 @@
 {
-    "/js/app.js": "/js/app.js?id=4f47ae5e3331c9e70c85",
-    "/css/app.css": "/css/app.css?id=be43a773b5d4705e8c9e"
+    "/js/app.js": "/js/app.js?id=da18769a8cebf4a9a915",
+    "/css/app.css": "/css/app.css?id=1b95b495b710ab4d9bd0",
+    "/js/chunk-app-admin-stand.js": "/js/chunk-app-admin-stand.js?id=5e7a7be4942b321a23de",
+    "/js/chunk-app-admin-transaction.js": "/js/chunk-app-admin-transaction.js?id=fd5a111a7fdf808e0ecb",
+    "/js/chunk-app-all-products.js": "/js/chunk-app-all-products.js?id=54768706583383fd1399",
+    "/js/chunk-app-all-stands.js": "/js/chunk-app-all-stands.js?id=c70141d1aa9ac19b7e5a",
+    "/js/chunk-app-bazaar.js": "/js/chunk-app-bazaar.js?id=8ad7eb1fabb4de3916c4",
+    "/js/chunk-app-dashboard.js": "/js/chunk-app-dashboard.js?id=b667093ef6b193db1c13",
+    "/js/chunk-app-login.js": "/js/chunk-app-login.js?id=a084ca1980c9e9c415bd",
+    "/js/chunk-app-register.js": "/js/chunk-app-register.js?id=4b9e7f14e5385e70e14e",
+    "/js/chunk-app-stand.js": "/js/chunk-app-stand.js?id=21fd949fa2950c7d06ea",
+    "/js/chunk-app-stand-details.js": "/js/chunk-app-stand-details.js?id=498fc7dcc5cad045a83a",
+    "/js/chunk-root-admin.js": "/js/chunk-root-admin.js?id=3275351c1009362dacff",
+    "/js/chunk-root-customer.js": "/js/chunk-root-customer.js?id=8fad344edf754b304d77"
 }

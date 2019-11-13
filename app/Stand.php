@@ -12,17 +12,18 @@ class Stand extends Model
     protected $fillable = [
         'name',        
         'description',
-
+        'user_id',
     ];
-
-
-    public function Products(){
+    
+    public function products(){
         return $this->hasMany(Product::class);
     }
 
-    public function Orders(){
+    public function orders(){
         return $this->hasMany(Order::class);
     }
-
-   
+    
+    public function users(){
+        return $this->belongsTo(User::class);
+    }
 }
