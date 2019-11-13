@@ -27,7 +27,7 @@ const routes = [
         ]
     },
     { 
-        path:'/admin',
+        path:'/backend',
         component: () => import('./components/RootAdmin' /* webpackChunkName: "js/chunk-root-admin" */),
         children: [
             { 
@@ -39,11 +39,11 @@ const routes = [
                 component: () => import('./components/Admin/AppRegister' /* webpackChunkName: "js/chunk-app-register" */), 
             },
             { 
-                path: '/admin', 
+                path: '/backend', 
                 component: () => import('./components/Admin/AppDashboard' /* webpackChunkName: "js/chunk-app-dashboard" */), 
                 children: [
                     { 
-                        path: '/admin', 
+                        path: '/backend', 
                         redirect: 'stands' 
                     },
                     { 
@@ -84,7 +84,7 @@ router.beforeEach(async (to, from, next) => {
     
     if(to.path === "/login" || to.path === "/register") {
         if(User.loggedIn()) {
-            next({path: '/admin', replace: true})
+            next({path: '/backend', replace: true})
             return
         }
     }

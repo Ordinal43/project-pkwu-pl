@@ -83,7 +83,7 @@ export default {
 
                     const res = await this.$user.signup(request)
                     await this.$user.storeSession(res.data)
-                    this.$router.replace({path: "/admin"});
+                    this.$router.replace({path: "/backend"});
                 } catch (error) {
                     alert(error);
                 }
