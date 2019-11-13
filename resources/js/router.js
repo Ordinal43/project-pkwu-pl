@@ -1,50 +1,64 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
-import RootAdmin from './components/RootAdmin'
-import RootCustomer from './components/RootCustomer'
-
-// customer Pages
-import AppBazaar from './components/Customer/AppBazaar'
-import AppAllStands from './components/Customer/AppAllStands'
-import AppAllProducts from './components/Customer/AppAllProducts'
-
-import AppStand from './components/Customer/AppStand'
-
 // Admin Pages
-import AppLogin from './components/Admin/AppLogin'
-import AppRegister from './components/Admin/AppRegister'
-
-import AppDashboard from './components/Admin/AppDashboard'
-
-import AppAdminStand from './components/Admin/Pages/AppAdminStand'
-import AppAdminTransaction from './components/Admin/Pages/AppAdminTransaction'
-import AppStandDetails from './components/Admin/Pages/AppStandDetails'
-
 Vue.use(VueRouter)
 
 const routes = [
     { 
-        path:'/', component: RootCustomer,
+        path:'/', 
+        component: () => import('./components/RootCustomer' /* webpackChunkName: "js/chunk-root-customer" */),
         children: [
-            { path: '/', component: AppBazaar },
-            { path: '/stands', component: AppAllStands },
-            { path: '/products', component: AppAllProducts },
-            { path: '/stands/:stand', component: AppStand, props: true},
+            { 
+                path: '/', 
+                component: () => import('./components/Customer/AppBazaar' /* webpackChunkName: "js/chunk-app-bazaar" */),
+            },
+            { 
+                path: '/stands', 
+                component: () => import('./components/Customer/AppAllStands' /* webpackChunkName: "js/chunk-app-all-stands" */),
+            },
+            { 
+                path: '/products',
+                component: () => import('./components/Customer/AppAllProducts' /* webpackChunkName: "js/chunk-app-all-products" */),
+            },
+            { 
+                path: '/stands/:stand', 
+                component: () => import('./components/Customer/AppStand' /* webpackChunkName: "js/chunk-app-stand" */),
+            },
         ]
     },
-    
     { 
-        path:'/admin', component: RootAdmin,
+        path:'/admin',
+        component: () => import('./components/RootAdmin' /* webpackChunkName: "js/chunk-root-admin" */),
         children: [
-            { path: '/login', component: AppLogin },
-            { path: '/register', component: AppRegister },
-            { path: '/admin', component: AppDashboard,
+            { 
+                path: '/login', 
+                component: () => import('./components/Admin/AppLogin' /* webpackChunkName: "js/chunk-app-login" */),
+            },
+            { 
+                path: '/register', 
+                component: () => import('./components/Admin/AppRegister' /* webpackChunkName: "js/chunk-app-register" */), 
+            },
+            { 
+                path: '/admin', 
+                component: () => import('./components/Admin/AppDashboard' /* webpackChunkName: "js/chunk-app-dashboard" */), 
                 children: [
-                    { path: '/admin', redirect: 'stands' },
-                    { path: 'stands', component: AppAdminStand },
-                    { path: 'stands/:stand', component: AppStandDetails, props: true },
-                    { path: 'transactions', component: AppAdminTransaction },
+                    { 
+                        path: '/admin', 
+                        redirect: 'stands' 
+                    },
+                    { 
+                        path: 'stands', 
+                        component: () => import('./components/Admin/Pages/AppAdminStand' /* webpackChunkName: "js/chunk-app-admin-stand" */), 
+                    },
+                    { 
+                        path: 'stands/:stand', 
+                        component: () => import('./components/Admin/Pages/AppStandDetails' /* webpackChunkName: "js/chunk-app-stand-details" */), 
+                        props: true
+                    },
+                    { 
+                        path: 'transactions', 
+                        component: () => import('./components/Admin/Pages/AppAdminTransaction' /* webpackChunkName: "js/chunk-app-admin-transaction" */), 
+                    },
                 ],
                 meta: { requiresAuth: true },
             },

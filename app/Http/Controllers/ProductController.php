@@ -17,7 +17,7 @@ class ProductController extends Controller
 
     public function index()
     {
-        return response()->json(Product::all(),200);
+        return response()->json(Product::all(), 200);
     }
 
     /**
@@ -35,8 +35,6 @@ class ProductController extends Controller
             'price' => $request->price,
             'image' => $this->uploadImage($request),
             'stand_id' => $request->stand_id
-            
-            
         ]);
 
         return response()->json([
