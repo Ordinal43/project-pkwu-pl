@@ -41,15 +41,7 @@ class User {
     }
 
     logout() {
-        // return axios.post('/api/auth/logout', {
-        //     token: AppStorage.getToken(),
-        // }, {
-        //     headers: {
-        //         'Accept': 'application/json',
-        //         'Content-type': 'application/json'
-        //     }
-        // });
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             setTimeout(() => {
                 AppStorage.clear();
                 resolve();
