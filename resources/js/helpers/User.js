@@ -1,7 +1,7 @@
 import AppStorage from './AppStorage'
 
 class User {
-    login(data){
+    login(data) {
         return axios.post('/api/login', data, {
             headers: {
                 'Accept': 'application/json',
@@ -10,7 +10,7 @@ class User {
         })
     }
         
-    signup(data){
+    signup(data) {
         return axios.post('/api/register', data, {
             headers: {
                 'Accept': 'application/json',
@@ -28,9 +28,9 @@ class User {
         })
     }
 
-    loggedIn(){
+    loggedIn() {
         const storedToken = AppStorage.getToken();
-        if(!!storedToken){
+        if(!!storedToken) {
             return true;
         } else {
             return false;
@@ -42,7 +42,7 @@ class User {
         return storedToken;
     }
 
-    logout(){
+    logout() {
         // return axios.post('/api/auth/logout', {
         //     token: AppStorage.getToken(),
         // }, {
@@ -59,8 +59,8 @@ class User {
         })
     }
 
-    info(){
-        if(this.loggedIn){
+    info() {
+        if(this.loggedIn) {
             return AppStorage.getUser();
         }
         return console.log("please login first");

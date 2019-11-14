@@ -126,7 +126,7 @@ export default {
         maxSize: 2048,
     }),
     methods: {
-        pickFile(){
+        pickFile() {
             this.$refs.file.click();
         },
         onFileChange(fieldName, file) {

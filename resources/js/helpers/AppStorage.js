@@ -1,26 +1,26 @@
 class AppStorage
 {
-    storeToken(token){
+    storeToken(token) {
         localStorage.setItem('bazaar-pl-token',token);
     }
-    storeUser(user){
+    storeUser(user) {
         localStorage.setItem('bazaar-pl-user',user);
     }
 
-    store(user,token){
+    store(user,token) {
         this.storeToken(token);
         this.storeUser(user);
     }
 
-    clear(){
+    clear() {
         localStorage.removeItem('bazaar-pl-token');
         localStorage.removeItem('bazaar-pl-user');
     }
 
-    getToken(){
+    getToken() {
         return localStorage.getItem('bazaar-pl-token');
     }
-    getUser(){
+    getUser() {
         let user = localStorage.getItem('bazaar-pl-user');
         return JSON.parse(user);
     }
