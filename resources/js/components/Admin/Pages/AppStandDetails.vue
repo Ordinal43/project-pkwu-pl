@@ -186,15 +186,36 @@ export default {
             this.openProductDialog();
         },
         async deleteProduct(id) {
-            const willDelete = confirm("Anda yakin ingin menghapus?");
-            if(willDelete) {
-                try {
-                    const res = await axios.delete(`/api/products/${id}`, null);
-                    console.log(res.data);
-                    this.getStandDetails();
-                } catch (err) {
-                    console.log(err);
+            let willDelete = await swal({
+                title: "Hapus menu ini?",
+                text: "Sekali dihapus, menu tidak bisa dikembalikan!",
+                icon: "warning",
+                dangerMode: true,
+                buttons: {
+                    cancel: {
+                        text: "Batal",
+                        value: false,
+                        visible: true,
+                        closeModal: true,
+                    },
+                    confirm: {
+                        text: "Hapus",
+                        value: true,
+                        visible: true,
+                        closeModal: false
+                    }
                 }
+            });
+
+            if(willDelete) {
+                await axios.delete(`/api/products/${id}`, null);
+                swal({
+                    title: "Success!",
+                    text: "Menu berhasil dihapus!",
+                    icon: "success",
+                    button: "Close",
+                });
+                this.getStandDetails();
             }
         },
         closeProduct() {

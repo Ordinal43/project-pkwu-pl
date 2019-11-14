@@ -70,7 +70,12 @@ export default {
                 await this.$user.logout();
                 this.$router.replace({path: "/login"})
             } catch (err) {
-                alert(err);
+                const code = err.response.status;
+                swal({
+                    title: "Oops!",
+                    text: `Error [${code}]. Please try again later.`,
+                    icon: "error",
+                });
             }
         },
     },

@@ -63,8 +63,13 @@ export default {
                     const res = await this.$user.login(request);
                     this.$user.storeSession(res.data);
                     this.$router.replace({path: "/backend"});
-                } catch (error) {
-                    alert(error);
+                } catch (err) {
+                    const code = err.response.status;
+                    swal({
+                        title: "Oops!",
+                        text: `Error [${code}]. Please try again later.`,
+                        icon: "error",
+                    });
                 }
                 this.loading = false
             }
