@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-toolbar app clipped-left>
+        <v-toolbar app>
             <v-toolbar-side-icon
                 @click.stop="drawer = !drawer"
             ></v-toolbar-side-icon>
@@ -11,24 +11,24 @@
                 Hello, {{ $user.info().name }}
             </span>
         </v-toolbar>
-        <v-navigation-drawer app clipped v-model="drawer">
+        <v-navigation-drawer app v-model="drawer">
             <v-list>
-                <v-list-tile
-                    v-for="(item, index) in routes"
-                    router
-                    :to="item.route"
-                    :key="'menu'+index"
+                <template v-for="(item, index) in routes">
+                    <v-list-tile
+                        v-if="!!$user.info().is_admin === item.need_admin"
+                        :key="`menu-${index}`"
+                        router
+                        :to="item.route"
                     >
-                    <v-list-tile-action>
-                        <v-icon>{{ item.icon }}</v-icon>
-                    </v-list-tile-action>
+                        <v-list-tile-action>
+                            <v-icon>{{ item.icon }}</v-icon>
+                        </v-list-tile-action>
 
-                    <v-list-tile-content>
-                        <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-                    </v-list-tile-content>
-                </v-list-tile>
-
-                <v-divider dark class="my-3"></v-divider>
+                        <v-list-tile-content>
+                            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                </template>
                 
                 <v-list-tile @click="logout">
                     <v-list-tile-action>
@@ -54,13 +54,21 @@ export default {
         routes: [
             {
                 icon: "store_mall_directory",
-                title: "Stand",
-                route: "/backend/stands",
+                title: "Stand saya",
+                route: "/backend/my-stand",
+                need_admin: false,
+            },
+            {
+                icon: "store_mall_directory",
+                title: "Semua stand",
+                route: "/backend/all-stands",
+                need_admin: true,
             },
             {
                 icon: "receipt",
                 title: "Transaksi",
                 route: "/backend/transactions",
+                need_admin: true,
             },
         ],
     }),

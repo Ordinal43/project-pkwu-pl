@@ -2,7 +2,7 @@
     <v-card>
         <v-toolbar color="transparent" flat>
             <v-toolbar-title class="headline">
-                {{ !!standId? 'Ubah Stand' : 'Stand Baru'}}
+                Ubah Stand
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn icon @click="$emit('close')">
@@ -17,7 +17,7 @@
                 indeterminate
             ></v-progress-circular>
         </v-card-text>
-        <v-form ref="form_new_stand" @submit.prevent="createNewStand" v-show="!dialogLoading">
+        <v-form ref="form_edit_stand" @submit.prevent="createNewStand" v-show="!dialogLoading">
             <v-card-text>
             <v-container grid-list-lg>
                 <v-layout row wrap>
@@ -44,9 +44,9 @@
                 <v-spacer></v-spacer>
                 <v-btn color="primary" large type="submit" :loading="btnLoading">
                     <v-icon left>
-                        {{ !!standId? 'save' : 'add'}}
+                        save
                     </v-icon>
-                    {{ !!standId? 'simpan' : 'buat stand'}}
+                    simpan
                 </v-btn>
             </v-card-actions>
         </v-form>
@@ -72,35 +72,34 @@ export default {
     }),
     methods: {
         async createNewStand() {
-            if(this.$refs.form_new_stand.validate()) {
+            if(this.$refs.form_edit_stand.validate()) {
                 this.btnLoading = true;
                 try {
-                    if(!this.standId) {
-                        const res = await axios.post('/api/stands', {
-                            name: this.name,
-                            description: this.description
-                        })
-                        alert("Stand berhasil dibuat");
-                    } else {
-                        const res = await axios.patch(`/api/stands/${this.standId}`, {
-                            name: this.name,
-                            description: this.description
-                        })
-                        alert("Stand berhasil diubah");
-                    }
+                    const res = await axios.patch(`/api/stands/${this.standId}`, {
+                        stand_name: this.name,
+                        description: this.description
+                    })
+                    swal({
+                        title: "Berhasil!",
+                        text: "Stand berhasil diubah",
+                        icon: "success",
+                    });
                     this.$emit('create_success');
                 } catch (err) {
-                    console.log(err);
+                    const code = err.response.status;
+                    swal({
+                        title: "Oops!",
+                        text: `Error [${code}]. Please try again later.`,
+                        icon: "error",
+                    });
                 }
             }
         },
     },
     async mounted() {
-        if(!!this.standId) {
-            const res = await axios.get(`/api/stands/${this.standId}`)
-            this.name = res.data.name
-            this.description = res.data.description
-        }
+        const res = await axios.get(`/api/stands/${this.standId}`)
+        this.name = res.data.stand_name
+        this.description = res.data.description
         this.dialogLoading = false;
         this.$nextTick(() => this.$refs.name.focus());
     }

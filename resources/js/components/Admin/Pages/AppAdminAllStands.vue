@@ -17,18 +17,12 @@
                 <v-flex>
                     <p class="headline primary--text">Semua Stand</p>
                 </v-flex>
-                <v-flex class="text-xs-right">
-                    <v-btn color="primary" @click="openStandDialog">
-                        <v-icon left>add</v-icon>
-                        Stand Baru
-                    </v-btn>
-                </v-flex>
             </v-layout>
             </v-flex>
             <v-flex xs12 md6 xl4 v-for="(item, i) in stands" :key="`prod-${i}`">
                 <v-card class="rounded" height="100%">
                     <v-card-title>
-                        <span class="headline">{{ item.name }}</span>
+                        <span class="headline">{{ item.stand_name }}</span>
                     </v-card-title>
                     <v-card-text class="grey--text text--darken-2 pt-0">
                         {{ item.description }}
@@ -46,41 +40,41 @@
                             <v-icon left>create</v-icon>
                             edit
                         </v-btn>
-                        <v-btn color="error" flat round @click="deleteStand(item.id)">
+                        <!-- <v-btn color="error" flat round @click="deleteStand(item.id)">
                             <v-icon left>delete</v-icon>
                             delete
-                        </v-btn>
+                        </v-btn> -->
                     </v-card-actions>
                 </v-card>
             </v-flex>
         </v-layout>
         </template>
+
         <v-dialog
-            v-model="dialogCreateEditStand"
+            v-model="dialogEditStand"
             persistent max-width="600px"
+            lazy
         >
-            <dialog-create-edit-stand 
+            <dialog-edit-stand
                 :standId="parseInt(standId)"
                 @close="closeStand"  
                 @create_success="reloadStand" 
-                :key="dialogCreateEditStandKey">
-            </dialog-create-edit-stand>
+                :key="dialogEditStandKey">
+            </dialog-edit-stand>
         </v-dialog>
     </v-container>
 </template>
 <script>
-import DialogCreateEditStand from './DialogCreateEditStand'
-
 export default {
     components: {
-        DialogCreateEditStand,
+        DialogEditStand: () => import('./DialogEditStand' /* webpackChunkName: "js/chunk-dialog-edit-stand-user" */),
     },
     data: () => ({
         standId: 0,
         loading: false,
         stands: [],
-        dialogCreateEditStand: false,
-        dialogCreateEditStandKey: 0,
+        dialogEditStand: false,
+        dialogEditStandKey: 0,
     }),
     methods: {
         fetchStands() {
@@ -97,8 +91,8 @@ export default {
             this.loading = false;
         },
         openStandDialog() {
-            this.dialogCreateEditStandKey = !!this.dialogCreateEditStandKey? 0 : 1;
-            this.dialogCreateEditStand = true;
+            this.dialogEditStandKey = !!this.dialogEditStandKey? 0 : 1;
+            this.dialogEditStand = true;
         },
         editStand(id) {
             this.standId = id;
@@ -109,7 +103,6 @@ export default {
             if(willDelete) {
                 try {
                     const res = await axios.delete(`/api/stands/${id}`, null);
-                    console.log(res.data);
                     this.getStands();
                 } catch (err) {
                     console.log(err);
@@ -117,7 +110,7 @@ export default {
             }
         },
         closeStand() {
-            this.dialogCreateEditStand = false;
+            this.dialogEditStand = false;
             this.standId = 0;
         },
         reloadStand() {

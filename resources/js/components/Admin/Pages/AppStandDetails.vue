@@ -16,8 +16,17 @@
                     <v-icon>arrow_back</v-icon>
                 </v-btn>
                 <div class="ml-4">
-                    <div class="headline font-weight-bold mb-1">Stand {{ name }}</div>
-                    <div class="subheading">{{ description }}</div>
+                    <v-layout row wrap align-center>
+                        <span class="headline font-weight-bold mr-1">
+                            Stand {{ name }}
+                        </span>
+                        <v-btn flat icon color="primary lighten-3" @click="editStand">
+                            <v-icon>create</v-icon>
+                        </v-btn>
+                    </v-layout>
+                    <v-layout row wrap>
+                        <div class="subheading">{{ description }}</div>
+                    </v-layout>
                 </div>
             </v-layout>
 
@@ -116,6 +125,18 @@
                 </v-tab-item>
             </v-tabs>
         </div>
+
+        <v-dialog
+            v-model="dialogEditStand"
+            persistent max-width="600px"
+        >
+            <dialog-edit-stand
+                :standId="parseInt(stand)"
+                @close="closeStand"  
+                @create_success="reloadStand" 
+                :key="dialogEditStandKey">
+            </dialog-edit-stand>
+        </v-dialog>
     </v-container>
 </template>
 <script>
@@ -127,21 +148,16 @@ import StandOrderTable from './StandOrderTable'
 export default {
     components: {
         DialogCreateEditProduct,
+        DialogEditStand: () => import('./DialogEditStand' /* webpackChunkName: "js/chunk-dialog-edit-stand-admin" */),
         StandOrderTable,
     },
-    props: {
-        stand: {
-            type: String,
-            required: true,
-        },
-    },
-    data: () => ({
+    data: (vm) => ({
         activeTab: null,
         tabItems: [
             {name: "Daftar Menu", icon: "local_dining"},
             {name: "Riwayat Order", icon: "receipt"},
         ],
-
+        stand: !!vm.$route.params.standId? vm.$route.params.standId : vm.$user.info().stands.id,
         productId: 0,
         loading: false,
         reloadLoading: false,
@@ -150,6 +166,8 @@ export default {
         standProducts: [],
         dialogCreateEditProduct: false,
         dialogCreateEditProductKey: 0,
+        dialogEditStand: false,
+        dialogEditStandKey: 0,
     }),
     computed: {
         ...mapGetters([
@@ -161,15 +179,12 @@ export default {
             addToCartVuex: 'addToCart',
             removeFromCartVuex: 'removeFromCart',
         }),
-        fetchStandDetails() {
-            return axios.get(`/api/stands/${this.stand}`);
-        },
         async getStandDetails() {
             this.loading = true;
             try {
-                const res = await this.fetchStandDetails();
+                const res = await axios.get(`/api/stands/${this.stand}`);
                 const stand = res.data;
-                this.name = stand.name;
+                this.name = stand.stand_name;
                 this.description = stand.description;
                 this.standProducts = stand.products.reverse();
             } catch (err) {
@@ -184,6 +199,10 @@ export default {
         editProduct(id) {
             this.productId = id;
             this.openProductDialog();
+        },
+        editStand() {
+            this.dialogEditStandKey = !!this.dialogEditStandKey? 0 : 1;
+            this.dialogEditStand = true;
         },
         async deleteProduct(id) {
             let willDelete = await swal({
@@ -224,6 +243,14 @@ export default {
         },
         reloadProduct() {
             this.closeProduct();
+            this.getStandDetails();
+        },
+        closeStand() {
+            this.dialogEditStand = false;
+            this.standId = 0;
+        },
+        reloadStand() {
+            this.closeStand();
             this.getStandDetails();
         },
         reloadOrders() {

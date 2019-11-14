@@ -95,7 +95,6 @@ export default {
             required: true,
         },
         standId: {
-            type: String,
             required: true,
         },
     },
@@ -136,7 +135,6 @@ export default {
             try {
                 const res = await this.fetchStandOrders();
                 let tes = res.data.filter(item => !!item.product);
-
                 this.items = tes.map(item => ({
                     id: item.id,
                     date: item.created_at,
@@ -146,9 +144,6 @@ export default {
                     qty: item.quantity,
                     total: (item.quantity * item.harga_satuan)
                 }));
-
-                console.log(this.items);
-                
             } catch (err) {
                 console.log(err);
             }

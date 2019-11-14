@@ -43,26 +43,37 @@ const routes = [
                 component: () => import('./components/Admin/AppDashboard' /* webpackChunkName: "js/chunk-app-dashboard" */), 
                 children: [
                     { 
-                        path: '/backend', 
-                        redirect: 'stands' 
+                        path: '', 
+                        redirect: 'my-stand',
                     },
                     { 
-                        path: 'stands', 
-                        component: () => import('./components/Admin/Pages/AppAdminStand' /* webpackChunkName: "js/chunk-app-admin-stand" */), 
+                        path: 'my-stand', 
+                        component: () => import('./components/Admin/Pages/AppStandDetails' /* webpackChunkName: "js/chunk-app-my-stand-details" */),
+                        meta: { forAdmin: false },
                     },
-                    { 
-                        path: 'stands/:stand', 
-                        component: () => import('./components/Admin/Pages/AppStandDetails' /* webpackChunkName: "js/chunk-app-stand-details" */), 
-                        props: true
+                    {
+                        path: 'all-stands', 
+                        component: () => import('./components/Admin/Pages/AppAdminAllStands' /* webpackChunkName: "js/chunk-app-admin-all-stands" */),
+                        meta: { forAdmin: true },
+                    },
+                    {
+                        path: 'stands/:standId', 
+                        component: () => import('./components/Admin/Pages/AppStandDetails' /* webpackChunkName: "js/chunk-app-stand-details" */),
+                        meta: { forAdmin: true },
                     },
                     { 
                         path: 'transactions', 
                         component: () => import('./components/Admin/Pages/AppAdminTransaction' /* webpackChunkName: "js/chunk-app-admin-transaction" */), 
+                        meta: { forAdmin: true },
                     },
                 ],
                 meta: { requiresAuth: true },
             },
         ],
+    },
+    { 
+        path: '*', 
+        redirect: '/' 
     },
 ]
 
@@ -79,6 +90,18 @@ router.beforeEach(async (to, from, next) => {
         if(!User.loggedIn()) {
             next({path: '/login', replace: true})
             return
+        } else {
+            if(to.matched.some(route => route.meta.forAdmin)) {
+                if(!User.info().is_admin) {
+                    next({path: '/backend/my-stand', replace: true})
+                    return
+                }
+            } else {
+                if(User.info().is_admin) {
+                    next({path: '/backend/all-stands', replace: true})
+                    return
+                }
+            }
         }
     } else {
         if(User.loggedIn()) {
