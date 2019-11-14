@@ -11,13 +11,13 @@
                                     label="Email"
                                     v-model="email"
                                     type="text"
-                                    :rules="[v => !!v || 'Harus diisi']"
+                                    :rules="[rules.required]"
                                 ></v-text-field>
                                 <v-text-field
                                     label="Password"
                                     v-model="password"
                                     type="password"
-                                    :rules="[v => !!v || 'Harus diisi']"
+                                    :rules="[rules.required]"
                                 ></v-text-field>
                             </v-card-text>
                             <v-card-text class="text-xs-center">
@@ -47,6 +47,9 @@ export default {
         email: null,
         password: null,
         loading: false,
+        rules: {
+            required: v => !!v || 'Harus diisi',
+        },
     }),
     methods: {
         async login() {
