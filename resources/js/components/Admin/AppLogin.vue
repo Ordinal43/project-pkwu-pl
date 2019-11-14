@@ -61,7 +61,7 @@ export default {
                         password: this.password
                     }
                     const res = await this.$user.login(request);
-                    await this.$user.storeSession(res.data);
+                    this.$user.storeSession(res.data);
                     this.$router.replace({path: "/backend"});
                 } catch (error) {
                     alert(error);

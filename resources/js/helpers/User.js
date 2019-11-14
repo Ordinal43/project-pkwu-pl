@@ -20,12 +20,10 @@ class User {
     }
 
     storeSession(data) {
-        return new Promise((resolve, reject) => {
-            const user = JSON.stringify(data.user);
-            const token = data.token;
-            AppStorage.store(user,token);
-            resolve();
-        })
+        const user = JSON.stringify(data.user);
+        
+        const token = data.token;
+        AppStorage.store(user,token);
     }
 
     loggedIn() {
