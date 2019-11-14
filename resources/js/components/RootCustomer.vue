@@ -1,11 +1,5 @@
 <template>
     <v-app>
-        <!-- <v-toolbar
-            color="blue-grey"
-            dark fixed app
-        >
-            <v-toolbar-title>PL Food Bazaar</v-toolbar-title>
-        </v-toolbar> -->
         <v-content>
             <router-view :key="routerKey"></router-view>
             <v-dialog
