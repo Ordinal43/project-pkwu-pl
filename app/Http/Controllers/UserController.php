@@ -35,7 +35,7 @@ class UserController extends Controller
 
         public function register(Request $request)
         {
-            DB::transaction(function () use ($request, & $user, & $stand){
+            DB::transaction(function () use ($request, & $user, & $stand, &$data){
             $validator = Validator::make($request->all(), [
                 'name' => 'required|max:50',
                 'email' => 'required|unique:users',
@@ -57,12 +57,11 @@ class UserController extends Controller
                 'description' => $request->input('description'),
                 'user_id' => $user->id,
                 ]);
+            $data = $user->stands;
             
         },3);
-
             return response()->json([
                 'user' => $user,
-                'stand' => $stand,
                 'token' => $user->createToken('bazaar')->accessToken,
             ]);
         }
