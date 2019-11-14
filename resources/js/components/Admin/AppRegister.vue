@@ -6,6 +6,11 @@
                     <v-flex xs12 md9 style="max-width: 600px">
                         <v-card elevation-10>
                         <v-form ref="login_form" @submit.prevent="register">
+                            <v-card-title>
+                                <h3 class="headline">
+                                    Data Akun
+                                </h3>
+                            </v-card-title>
                             <v-card-text>
                                 <v-text-field
                                     label="Nama"
@@ -32,6 +37,27 @@
                                     :rules="[rules.required, rules.password]"
                                 ></v-text-field>
                             </v-card-text>
+
+                            <v-card-title>
+                                <h3 class="headline">
+                                    Data Stand
+                                </h3>
+                            </v-card-title>
+                            <v-card-text>
+                                <v-text-field
+                                    label="Nama stand"
+                                    v-model="standName"
+                                    :rules="[rules.required]"
+                                    ref="name"
+                                ></v-text-field>
+                                <v-textarea
+                                    label="Deskripsi stand"
+                                    v-model="standDescription"
+                                    :rules="[rules.required]"
+                                    rows="3"
+                                ></v-textarea>
+                            </v-card-text>
+
                             <v-card-text class="text-xs-center">
                                 <v-btn color="primary" 
                                     :loading="loading"
@@ -61,6 +87,8 @@ export default {
         email: null,
         password: null,
         cpassword: null,
+        standName: null,
+        standDescription: null,
         loading: false,
 
         rules: {
@@ -79,6 +107,8 @@ export default {
                         email: this.email,
                         password: this.password,
                         c_password: this.cpassword,
+                        stand_name: this.standName,
+                        description: this.standDescription,
                     };
 
                     const res = await this.$user.signup(request)
