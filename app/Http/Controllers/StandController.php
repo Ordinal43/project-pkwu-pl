@@ -25,7 +25,7 @@ class StandController extends Controller
     public function store(Request $request)
     {
         $stand = Stand::create([
-            'name' => $request->name,
+            'stand_name' => $request->stand_name,
             'description' => $request->description,
             
                        
@@ -48,7 +48,7 @@ class StandController extends Controller
     public function update(Request $request, Stand $stand)
     {
         $status = $stand->update(
-            $request->only(['name', 'description'])
+            $request->only(['stand_name', 'description'])
         );
 
         return response()->json([
