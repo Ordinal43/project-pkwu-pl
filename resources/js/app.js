@@ -5,6 +5,7 @@ import 'vuetify/dist/vuetify.min.css'
 import router from './router'
 import store from './store'
 import axios from 'axios'
+import '@mdi/font/css/materialdesignicons.css'
 
 window.EventBus = new Vue()
 window.axios = axios.create()
