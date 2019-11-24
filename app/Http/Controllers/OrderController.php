@@ -16,13 +16,13 @@ class OrderController extends Controller
                 Order::with([
                     'Nota:id,customer',
                     'Product'=> function($query) use ($request) {
-                        
                         $query->where('stand_id', '=', $request->input('stand'));
-                        $query->where('is_ready', '=', true);
                         $query->select('id', 'name');
                         $query->withTrashed();   
                     }
-                ])->get()
+                ])
+                ->where('is_ready', '=', true)
+                ->get()
             );
         }
 
@@ -36,13 +36,11 @@ class OrderController extends Controller
                 Order::with([
                     'Nota:id,customer',
                     'Product'=> function($query) use ($request) {
-                        
                         $query->where('stand_id', '=', $request->input('stand'));
-                        $query->where('is_ready', '=', false);
                         $query->select('id', 'name');
                         $query->withTrashed();   
                     }
-                ])->get()
+                ])->where('is_ready', '=', false)->get()
             );
         }
 
@@ -56,13 +54,11 @@ class OrderController extends Controller
                 Order::with([
                     'Nota:id,customer',
                     'Product'=> function($query) use ($request) {
-                        
                         $query->where('stand_id', '=', $request->input('stand'));
-                        $query->where('is_ready', '=', null);
                         $query->select('id', 'name');
                         $query->withTrashed();   
                     }
-                ])->get()
+                ])->where('is_ready', '=', null)->get()
             );
         }
 
@@ -81,7 +77,7 @@ class OrderController extends Controller
             },
             'Product.Stand'=>function($query){
                 $query->withTrashed();
-                $query->select('id', 'name');
+                $query->select('id', 'stand_name');
             }
             ])->get(),200);
     }
@@ -132,14 +128,20 @@ class OrderController extends Controller
     }
 
     public function ready(Order $order){
-        $order->is_ready = true;
-        $status = $order->save();
+
+         DB::transaction(function () use ($order, &$status) {            
+            $product = Product::find($order['product_id']);
+            $product->units -= $order['quantity'];
+            $product->save();
+            $order->is_ready = true;
+            $status = $order->save();        
+    }, 3);
+
         return response()->json([
-            'status' => $status,
+            'status' =>(bool) $status,
             'message' => $status ? 'Order is ready' : 'Error'
         ]);
     }
-
     public function destroy(Order $order)
     {
 

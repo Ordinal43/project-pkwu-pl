@@ -12,8 +12,9 @@ class StandTableSeeder extends Seeder
 
        foreach(range (1,10) as $i){
            Stand::create([
-               'name' => $faker->name,
+               'stand_name' => $faker->name,
                'description' => $faker->name,
+               'user_id' => $faker->numberBetween(2,10)
            ]);
        }
     }

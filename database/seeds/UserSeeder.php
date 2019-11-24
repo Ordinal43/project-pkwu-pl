@@ -15,5 +15,14 @@ class UserSeeder extends Seeder
                'password' => Hash::make('@Admin123'),
                'is_admin' => true,
         ]);
+
+        foreach(range (1,9) as $i){
+            User::create([
+                'name' => $faker->name,
+                'email' => $faker->email,
+                'password' => Hash::make('@Admin123'),
+                'is_admin' => false,
+            ]);
+        }
     }
 }
