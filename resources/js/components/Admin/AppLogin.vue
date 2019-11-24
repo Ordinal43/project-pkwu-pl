@@ -3,7 +3,15 @@
         <v-content>
             <v-container grid-list-lg fill-height>
                 <v-layout row wrap justify-center align-center>
-                    <v-flex xs12 md9 style="max-width: 600px">
+                    <v-flex xs12 md5>
+                        <v-img
+                            src="/assets/logo-pkwu.png"
+                            contain
+                            position="center center"
+                            height="300"
+                        ></v-img>
+                    </v-flex>
+                    <v-flex xs12 md7 style="max-width: 600px">
                         <v-card elevation-10>
                         <v-form ref="login_form" @submit.prevent="login">
                             <v-card-text>
@@ -62,7 +70,7 @@ export default {
                     }
                     const res = await this.$user.login(request);
                     this.$user.storeSession(res.data);
-                    this.$router.replace({path: "/backend"});
+                    this.$router.replace({path: "/"});
                 } catch (err) {
                     const code = err.response.status;
                     swal({

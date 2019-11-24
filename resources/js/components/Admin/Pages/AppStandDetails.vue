@@ -12,7 +12,7 @@
         </v-layout>
         <div v-show="!loading">
             <v-layout row align-center>
-                <v-btn fab dark color="primary" to="/backend/stands">
+                <v-btn fab dark color="primary" to="/all-stands" v-if="$user.info().is_admin">
                     <v-icon>arrow_back</v-icon>
                 </v-btn>
                 <div class="ml-4">
@@ -20,115 +20,83 @@
                         <span class="headline font-weight-bold mr-1">
                             Stand {{ name }}
                         </span>
-                        <v-btn flat icon color="primary lighten-3" @click="editStand">
-                            <v-icon>create</v-icon>
-                        </v-btn>
+                        <v-tooltip bottom>
+                            <template v-slot:activator="{ on }">
+                                <v-btn flat icon color="primary" 
+                                    @click="editStand" v-on="on">
+                                    <v-icon>create</v-icon>
+                                </v-btn>
+                            </template>
+                            <span>Tooltip</span>
+                        </v-tooltip>
                     </v-layout>
                     <v-layout row wrap>
                         <div class="subheading">{{ description }}</div>
                     </v-layout>
                 </div>
             </v-layout>
+            <v-divider class="mt-4"></v-divider>
+            <v-container grid-list-lg>
+                <v-layout row align-center class="mt-2 mb-3">
+                    <v-flex xs6 class="title font-weight-bold">
+                        Daftar Menu
+                        
+                    </v-flex>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" @click="openProductDialog">
+                        <v-icon left>add</v-icon>
+                        menu baru
+                    </v-btn>
+                </v-layout>
+                <v-layout row wrap>
+                    <v-flex xs12 md6 lg4 v-for="(item, i) in standProducts" :key="`am-${i}`">
+                        <v-card class="rounded menu-card" height="100%">
+                            <div>
+                            <v-img class="menu-img"
+                            :src="item.image"
+                            :aspect-ratio="16/9"
+                            ></v-img>
 
-            <v-divider class="my-4"></v-divider>
-            <v-tabs
-                icons-and-text
-                v-model="activeTab" color="transparent"
-                slider-color="primary"
-            >
-                <v-tab
-                    v-for="(item, i) in tabItems"
-                    :key="i" ripple
-                    :href="`#tab-${i}`"
+                            <v-card-text>
+                                <p class="title font-weight-regular">{{ item.name }}</p>
+                                <div class="subheading">{{ $rupiahFormat(item.price) }}</div>
+                                <div class="subheading">Sisa {{ item.units }}</div>
+                            </v-card-text>
+                            </div>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color="warning" flat round @click="editProduct(item.id)">
+                                    <v-icon left>create</v-icon>
+                                    edit
+                                </v-btn>
+                                <v-btn color="error" flat round @click="deleteProduct(item.id)">
+                                    <v-icon left>delete</v-icon>
+                                    delete
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-flex>
+                </v-layout>
+                <v-dialog
+                    v-model="dialogCreateEditProduct"
+                    persistent max-width="600px"
+                    lazy
                 >
-                    {{ item.name }}
-                    <v-icon>{{ item.icon }}</v-icon>
-                </v-tab>
-                <v-tab-item value="tab-0">
-                <v-container grid-list-lg>
-                    <v-layout row align-center class="mt-2 mb-3">
-                        <div class="subheading font-weight-bold">
-                            Daftar Menu
-                        </div>
-                        <v-spacer></v-spacer>
-                        <v-btn color="primary" @click="openProductDialog">
-                            <v-icon left>add</v-icon>
-                            menu baru
-                        </v-btn>
-                    </v-layout>
-                    <v-layout row wrap>
-                        <v-flex xs12 md6 lg4 v-for="(item, i) in standProducts" :key="`am-${i}`">
-                            <v-card class="rounded menu-card" height="100%">
-                                <div>
-                                <v-img class="menu-img"
-                                :src="item.image"
-                                :aspect-ratio="16/9"
-                                ></v-img>
-
-                                <v-card-text>
-                                    <p class="title font-weight-regular">{{ item.name }}</p>
-                                    <div class="subheading">{{ $rupiahFormat(item.price) }}</div>
-                                    <div class="subheading">Sisa {{ item.units }}</div>
-                                </v-card-text>
-                                </div>
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn color="warning" flat round @click="editProduct(item.id)">
-                                        <v-icon left>create</v-icon>
-                                        edit
-                                    </v-btn>
-                                    <v-btn color="error" flat round @click="deleteProduct(item.id)">
-                                        <v-icon left>delete</v-icon>
-                                        delete
-                                    </v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-flex>
-                    </v-layout>
-                    <v-dialog
-                        v-model="dialogCreateEditProduct"
-                        persistent max-width="600px"
-                    >
-                        <dialog-create-edit-product 
-                            @close="closeProduct" 
-                            @create_success="reloadProduct"
-                            :productId="parseInt(productId)" 
-                            :stand="parseInt(stand)"
-                            :key="dialogCreateEditProductKey">
-                        </dialog-create-edit-product>
-                    </v-dialog>
-                </v-container>
-                </v-tab-item>
-                <v-tab-item value="tab-1">
-                <v-container grid-list-lg>
-                    <v-layout row align-center class="mt-2 mb-3">
-                        <div class="subheading font-weight-bold">
-                            Riwayat Order
-                        </div>
-                        <v-spacer></v-spacer>
-                        <v-btn color="primary" @click="reloadOrders" :loading="reloadLoading">
-                            <v-icon left>replay</v-icon>
-                            muat ulang
-                        </v-btn>
-                        <v-btn color="success" @click="printOrders">
-                            <v-icon left>print</v-icon>
-                            cetak
-                        </v-btn>
-                    </v-layout>
-                    <v-layout row wrap>
-                        <stand-order-table
-                            :standName="name"
-                            :standId="stand"
-                        ></stand-order-table>
-                    </v-layout>
-                </v-container>
-                </v-tab-item>
-            </v-tabs>
+                    <dialog-create-edit-product 
+                        @close="closeProduct" 
+                        @create_success="reloadProduct"
+                        :productId="parseInt(productId)" 
+                        :stand="parseInt(stand)"
+                        :key="dialogCreateEditProductKey">
+                    </dialog-create-edit-product>
+                </v-dialog>
+            </v-container>
         </div>
 
         <v-dialog
             v-model="dialogEditStand"
             persistent max-width="600px"
+            lazy
         >
             <dialog-edit-stand
                 :standId="parseInt(stand)"
@@ -142,25 +110,16 @@
 <script>
 import { mapMutations } from 'vuex'
 import { mapGetters } from 'vuex'
-import DialogCreateEditProduct from './DialogCreateEditProduct'
-import StandOrderTable from './StandOrderTable'
 
 export default {
     components: {
-        DialogCreateEditProduct,
-        DialogEditStand: () => import('./DialogEditStand' /* webpackChunkName: "js/chunk-dialog-edit-stand-admin" */),
-        StandOrderTable,
+        DialogCreateEditProduct: () => import('./DialogCreateEditProduct' /* webpackChunkName: "js/chunk-dialog-create-edit-product" */),
+        DialogEditStand: () => import('./DialogEditStand' /* webpackChunkName: "js/chunk-dialog-edit-stand" */),
     },
     data: (vm) => ({
-        activeTab: null,
-        tabItems: [
-            {name: "Daftar Menu", icon: "local_dining"},
-            {name: "Riwayat Order", icon: "receipt"},
-        ],
         stand: !!vm.$route.params.standId? vm.$route.params.standId : vm.$user.info().stands.id,
         productId: 0,
         loading: false,
-        reloadLoading: false,
         name: "",
         description: "",
         standProducts: [],
@@ -247,25 +206,14 @@ export default {
         },
         closeStand() {
             this.dialogEditStand = false;
-            this.standId = 0;
         },
         reloadStand() {
             this.closeStand();
             this.getStandDetails();
         },
-        reloadOrders() {
-            this.reloadLoading = true;
-            EventBus.$emit('reload_orders');
-        },
-        printOrders() {
-            EventBus.$emit('print_orders');
-        },
     },
     mounted() {
         this.getStandDetails();
-        EventBus.$on('reload_orders_done',() => {
-            this.reloadLoading = false;
-        })
     }
 }
 </script>

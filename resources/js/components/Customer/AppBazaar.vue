@@ -7,7 +7,7 @@
         >
             <v-layout align-center justify-center>
                 <v-img
-                    src="/assets/svg/logo.svg"
+                    src="/assets/svg/logo-pkwu.png"
                     max-height="700" contain
                     position="center center"
                 ></v-img>

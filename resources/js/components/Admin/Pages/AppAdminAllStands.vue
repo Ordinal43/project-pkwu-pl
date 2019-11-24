@@ -32,7 +32,7 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="indigo" flat round  :to="`/backend/stands/${item.id}`">
+                        <v-btn color="indigo" flat round  :to="`/stands/${item.id}`">
                             <v-icon left>info</v-icon>
                             detail
                         </v-btn>
@@ -67,7 +67,7 @@
 <script>
 export default {
     components: {
-        DialogEditStand: () => import('./DialogEditStand' /* webpackChunkName: "js/chunk-dialog-edit-stand-user" */),
+        DialogEditStand: () => import('./DialogEditStand' /* webpackChunkName: "js/chunk-dialog-edit-stand" */),
     },
     data: () => ({
         standId: 0,

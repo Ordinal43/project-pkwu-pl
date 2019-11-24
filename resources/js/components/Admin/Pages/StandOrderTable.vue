@@ -47,7 +47,7 @@
             <div class="ma-3">
                 <div class="text-xs-center">
                     <p class="headline">Laporan Riwayat Transaksi</p>
-                    <p class="title">Stand {{ standName }}</p>
+                    <p class="title">Stand {{ $user.info().stands.stand_name }}</p>
                 </div>
                 <div>
                     <table class="orders">
@@ -90,16 +90,16 @@
 <script>
 export default {
     props: {
-        standName: {
-            type: String,
+        items: {
+            type: Array,
             required: true,
         },
-        standId: {
+        loading: {
+            type: Boolean,
             required: true,
-        },
+        }
     },
     data: () => ({
-        loading: false,
         headers: [
             { text: 'ID', value: 'id', sortable: false },
             { text: 'Tgl order', value: 'date' },
@@ -109,7 +109,6 @@ export default {
             { text: 'Harga', value: 'price' },
             { text: 'Total', value: 'total' },
         ],
-        items: [],
     }),
     computed: {
         getTotalSold() {
@@ -123,39 +122,8 @@ export default {
         print() {
             this.$htmlToPaper('printMe');
         },
-        fetchStandOrders() {
-            return axios.get('/api/orders', {
-                params: {
-                    stand: this.standId
-                }
-            });
-        },
-        async getStandOrders() {
-            this.loading = true;
-            try {
-                const res = await this.fetchStandOrders();
-                let tes = res.data.filter(item => !!item.product);
-                this.items = tes.map(item => ({
-                    id: item.id,
-                    date: item.created_at,
-                    menu: item.product.name,
-                    customer: item.nota.customer,
-                    price: item.harga_satuan,
-                    qty: item.quantity,
-                    total: (item.quantity * item.harga_satuan)
-                }));
-            } catch (err) {
-                console.log(err);
-            }
-            this.loading = false;
-            EventBus.$emit('reload_orders_done');
-        },
     },
     mounted() {
-        this.getStandOrders();
-        EventBus.$on('reload_orders',() => {
-            this.getStandOrders();
-        }); 
         EventBus.$on('print_orders',() => {
             this.$htmlToPaper('printMe');
         }); 

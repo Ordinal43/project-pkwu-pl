@@ -17,3 +17,10 @@
 .menu-card .menu-img {
     border-radius: 10px 10px 0 0 !important;
 }
+
+.overflow {
+    text-overflow: ellipsis;
+    /* Required for text-overflow to do anything */
+    white-space: pre-wrap;
+    overflow: hidden;
+  }

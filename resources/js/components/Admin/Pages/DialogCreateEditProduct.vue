@@ -21,18 +21,19 @@
         v-show="!dialogLoading">
             <v-card-text class="text-xs-center">
                 <v-slide-y-transition>
-                <v-img class="menu-img"
-                    v-if="!!fileUrl"
-                    :src="fileUrl"
-                    max-height="200px"
-                    contain
-                ></v-img>
+                    <v-img class="menu-img"
+                        v-if="!!fileUrl"
+                        :src="fileUrl"
+                        max-height="200px"
+                        contain
+                    ></v-img>
                 </v-slide-y-transition>
+                
+                <div class="mt-3"></div>
 
-                <p v-show="!!errorText" class="red--text">{{ errorText }}</p>
-
-                <v-btn color="primary" flat @click="pickFile">
-                    Upload Gambar
+                <v-btn color="primary" outline round @click="pickFile">
+                    <v-icon left>add_a_photo</v-icon>
+                    Unggah Gambar
                 </v-btn>
                 
                 <input type="file"
@@ -121,29 +122,33 @@ export default {
             notZero: v => v > 0 || 'Tidak boleh kurang dari 1',
             tooMuch: v => v < 999999 || 'Nilai terlalu besar!',
         },
-
-        errorText: '',
-        maxSize: 2048,
     }),
     methods: {
         pickFile() {
             this.$refs.file.click();
         },
         onFileChange(fieldName, file) {
-            const { maxSize } = this;
             console.log(fieldName);
             
             let imageFile = file[0]
             if (file.length > 0) {
-                let size = imageFile.size / maxSize / maxSize
+                let size = imageFile.size / 1024 / 1024
                 if (!imageFile.type.match('image.*')) {
-                    this.errorText = 'File harus berupa gambar!';
-                } else if (size>1) {
+                    swal({
+                        title: "File tidak sesuai!",
+                        text: "File harus berupa gambar!",
+                        icon: "error",
+                        button: "Tutup",
+                    });
+                } else if (size>0.5) {
                     // check whether the size is greater than the size limit
-                    this.errorText = 'Ukuran file harus dibawah 1 MB!'
+                    swal({
+                        title: "Ukuran tidak sesuai!",
+                        text: "Ukuran gambar harus dibawah 500 KB!",
+                        icon: "error",
+                        button: "Tutup",
+                    });
                 } else {
-                    this.errorText = '';
-                    
                     this.fileUrl = URL.createObjectURL(imageFile);
                     this.fileBin = imageFile;
                     // this.copyFrom(formData);

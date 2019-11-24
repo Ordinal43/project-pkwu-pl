@@ -4,30 +4,26 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [
+    // { 
+    //     path:'/', 
+    //     component: () => import('./components/RootCustomer' /* webpackChunkName: "js/chunk-root-customer" */),
+    //     children: [
+    //         { 
+    //             path: '/', 
+    //             component: () => import('./components/Customer/AppBazaar' /* webpackChunkName: "js/chunk-app-bazaar" */),
+    //         },
+    //         { 
+    //             path: '/stands', 
+    //             component: () => import('./components/Customer/AppAllStands' /* webpackChunkName: "js/chunk-app-all-stands" */),
+    //         },
+    //         { 
+    //             path: '/products',
+    //             component: () => import('./components/Customer/AppAllProducts' /* webpackChunkName: "js/chunk-app-all-products" */),
+    //         },
+    //     ]
+    // },
     { 
-        path:'/', 
-        component: () => import('./components/RootCustomer' /* webpackChunkName: "js/chunk-root-customer" */),
-        children: [
-            { 
-                path: '/', 
-                component: () => import('./components/Customer/AppBazaar' /* webpackChunkName: "js/chunk-app-bazaar" */),
-            },
-            { 
-                path: '/stands', 
-                component: () => import('./components/Customer/AppAllStands' /* webpackChunkName: "js/chunk-app-all-stands" */),
-            },
-            { 
-                path: '/products',
-                component: () => import('./components/Customer/AppAllProducts' /* webpackChunkName: "js/chunk-app-all-products" */),
-            },
-            { 
-                path: '/stands/:stand', 
-                component: () => import('./components/Customer/AppStand' /* webpackChunkName: "js/chunk-app-stand" */),
-            },
-        ]
-    },
-    { 
-        path:'/backend',
+        path:'/',
         component: () => import('./components/RootAdmin' /* webpackChunkName: "js/chunk-root-admin" */),
         children: [
             { 
@@ -39,16 +35,26 @@ const routes = [
                 component: () => import('./components/Admin/AppRegister' /* webpackChunkName: "js/chunk-app-register" */), 
             },
             { 
-                path: '/backend', 
+                path: '', 
                 component: () => import('./components/Admin/AppDashboard' /* webpackChunkName: "js/chunk-app-dashboard" */), 
                 children: [
                     { 
                         path: '', 
-                        redirect: 'my-stand',
+                        redirect: 'order-menu',
+                    },
+                    { 
+                        path: 'order-menu', 
+                        component: () => import('./components/Admin/Pages/AppOrder' /* webpackChunkName: "js/chunk-app-order" */),
+                        meta: { forAdmin: false },
                     },
                     { 
                         path: 'my-stand', 
                         component: () => import('./components/Admin/Pages/AppStandDetails' /* webpackChunkName: "js/chunk-app-my-stand-details" */),
+                        meta: { forAdmin: false },
+                    },
+                    { 
+                        path: 'stand-transactions', 
+                        component: () => import('./components/Admin/Pages/AppStandTransactions' /* webpackChunkName: "js/chunk-app-stand-transactions" */),
                         meta: { forAdmin: false },
                     },
                     {
@@ -93,26 +99,26 @@ router.beforeEach(async (to, from, next) => {
         } else {
             if(to.matched.some(route => route.meta.forAdmin)) {
                 if(!User.info().is_admin) {
-                    next({path: '/backend/my-stand', replace: true})
+                    next({path: '/order-menu', replace: true})
                     return
                 }
             } else {
                 if(User.info().is_admin) {
-                    next({path: '/backend/all-stands', replace: true})
+                    next({path: '/all-stands', replace: true})
                     return
                 }
             }
         }
     } else {
         if(User.loggedIn()) {
-            next({path: '/backend', replace: true})
+            next({path: '/', replace: true})
             return
         }
     }
     
     if(to.path === "/login" || to.path === "/register") {
         if(User.loggedIn()) {
-            next({path: '/backend', replace: true})
+            next({path: '/', replace: true})
             return
         }
     }
