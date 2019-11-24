@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class OrderController extends Controller
 {
    
-    public function index(Request $request)
+    public function indexTrue(Request $request)
     {
         if ($request->has('stand')) {
             return response()->json(
@@ -18,9 +18,49 @@ class OrderController extends Controller
                     'Product'=> function($query) use ($request) {
                         
                         $query->where('stand_id', '=', $request->input('stand'));
+                        $query->where('is_ready', '=', true);
                         $query->select('id', 'name');
-                        $query->withTrashed();
+                        $query->withTrashed();   
+                    }
+                ])->get()
+            );
+        }
+
+        return response()->json(Order::with(['Nota:id,customer', 'Product:id,name'])->get(),200);
+    }
+
+    public function indexFalse(Request $request)
+    {
+        if ($request->has('stand')) {
+            return response()->json(
+                Order::with([
+                    'Nota:id,customer',
+                    'Product'=> function($query) use ($request) {
                         
+                        $query->where('stand_id', '=', $request->input('stand'));
+                        $query->where('is_ready', '=', false);
+                        $query->select('id', 'name');
+                        $query->withTrashed();   
+                    }
+                ])->get()
+            );
+        }
+
+        return response()->json(Order::with(['Nota:id,customer', 'Product:id,name'])->get(),200);
+    }
+
+    public function indexNull(Request $request)
+    {
+        if ($request->has('stand')) {
+            return response()->json(
+                Order::with([
+                    'Nota:id,customer',
+                    'Product'=> function($query) use ($request) {
+                        
+                        $query->where('stand_id', '=', $request->input('stand'));
+                        $query->where('is_ready', '=', null);
+                        $query->select('id', 'name');
+                        $query->withTrashed();   
                     }
                 ])->get()
             );
@@ -43,7 +83,6 @@ class OrderController extends Controller
                 $query->withTrashed();
                 $query->select('id', 'name');
             }
-            
             ])->get(),200);
     }
 
@@ -83,7 +122,24 @@ class OrderController extends Controller
         ]);
     }
 
-  
+    public function canceled(Order $order){
+        $order->is_ready = false;
+        $status = $order->save();
+        return response()->json([
+            'status' => $status,
+            'message' => $status ? 'Order Canceled' : 'Error Canceling Order'
+        ]);
+    }
+
+    public function ready(Order $order){
+        $order->is_ready = true;
+        $status = $order->save();
+        return response()->json([
+            'status' => $status,
+            'message' => $status ? 'Order is ready' : 'Error'
+        ]);
+    }
+
     public function destroy(Order $order)
     {
 
@@ -97,7 +153,7 @@ class OrderController extends Controller
         }, 3);
 
         return response()->json([
-            'status' => (bool )$status,
+            'status' => (bool)$status,
             'message' => $status ? 'Order Deleted!' : 'Error Deleting Order'
         ]);
     }

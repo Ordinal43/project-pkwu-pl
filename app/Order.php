@@ -10,6 +10,7 @@ class Order extends Model
         'product_id',
         'harga_satuan',
         'quantity',
+        'is_ready',
         'nota_id',
         
     ];

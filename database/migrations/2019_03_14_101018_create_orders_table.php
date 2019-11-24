@@ -14,6 +14,7 @@ class CreateOrdersTable extends Migration
             $table->unsignedInteger('product_id');
             $table->double('harga_satuan');
             $table->unsignedInteger('quantity');
+            $table->boolean('is_ready')->nullable();
             $table->unsignedInteger('nota_id');
 
             $table->timestamps();
