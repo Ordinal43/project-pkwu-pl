@@ -15,9 +15,9 @@
                         <v-btn flat large
                             v-on="on"
                         >
-                            <v-badge left color="red">
+                            <v-badge left color="red" :value="!!getCartItems.length">
                                 <template v-slot:badge v-if="true">
-                                    <span>6</span>
+                                    <span>{{ getCartItems.length }}</span>
                                 </template>
                                 <v-icon left>shopping_cart</v-icon>
                                 KERANJANG
@@ -129,6 +129,7 @@
     </v-app>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 
 export default {
     data: () => ({
@@ -166,6 +167,9 @@ export default {
             const currentPath = this.$router.history.current.path
             return this.routes.map(item => item.route).indexOf(currentPath) !== -1;
         },
+        ...mapGetters([
+            'getCartItems'
+        ]),
     },
     methods: {
         async logout() {
