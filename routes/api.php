@@ -21,12 +21,12 @@ Route::get('/products/random', 'ProductController@random');
 
 //Nota&Order
 Route::get('/nota/{nota}', 'NotaController@show');
-Route::get('/orders-all', 'OrderController@all');
 Route::patch('/cancel/{order}', 'OrderController@canceled');
 Route::patch('/ready/{order}', 'OrderController@ready');
-Route::get('/orders-true', 'OrderController@indexTrue');
-Route::get('/orders-false', 'OrderController@indexFalse');
-Route::get('/orders-null', 'OrderController@indexNull');
+Route::get('/orders-all', 'OrderController@all'); //Return All Statement (True/ False/ Null)
+Route::get('/orders-true', 'OrderController@indexTrue'); //Return is_ready = True
+Route::get('/orders-false', 'OrderController@indexFalse'); //Return is_ready = False
+Route::get('/orders-null', 'OrderController@indexNull'); //Return is_ready = Null
 
 Route::resource('/orders', 'OrderController')->except(['all','indexTrue','indexFalse','indexNull','canceled', 'ready']);
 Route::resource('/nota', 'NotaController')->except(['show']);
