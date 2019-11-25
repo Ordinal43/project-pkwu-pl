@@ -37,9 +37,9 @@
                     <td>{{ props.item.date }}</td>
                     <td>{{ props.item.menu }}</td>
                     <td>{{ props.item.customer }}</td>
-                    <td class="text-xs-right">{{ props.item.qty }}</td>
-                    <td class="text-xs-right">{{ $rupiahFormat(props.item.price) }}</td>
-                    <td class="text-xs-right">{{ $rupiahFormat(props.item.total) }}</td>
+                    <td>{{ props.item.qty }}</td>
+                    <td>{{ $rupiahFormat(props.item.price) }}</td>
+                    <td>{{ $rupiahFormat(props.item.total) }}</td>
                 </template>
             </v-data-table>
         </v-card>
@@ -66,9 +66,9 @@
                                 <td>{{ item.date }}</td>
                                 <td>{{ item.menu }}</td>
                                 <td>{{ item.customer }}</td>
-                                <td class="text-xs-right">{{ item.qty }}</td>
-                                <td class="text-xs-right">{{ $rupiahFormat(item.price) }}</td>
-                                <td class="text-xs-right">{{ $rupiahFormat(item.total) }}</td>
+                                <td>{{ item.qty }}</td>
+                                <td>{{ $rupiahFormat(item.price) }}</td>
+                                <td>{{ $rupiahFormat(item.total) }}</td>
                             </tr>
                         </template>
                         <tfoot class="title">

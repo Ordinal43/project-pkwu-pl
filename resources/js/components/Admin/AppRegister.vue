@@ -3,7 +3,7 @@
         <v-content>
             <v-container grid-list-lg fill-height>
                 <v-layout row wrap justify-center align-center>
-                    <v-flex xs12 md5>
+                    <v-flex xs12 md5 lg3>
                         <v-img
                             src="/assets/logo-pkwu.png"
                             contain
@@ -11,7 +11,7 @@
                             height="300"
                         ></v-img>
                     </v-flex>
-                    <v-flex xs12 md7 style="max-width: 600px">
+                    <v-flex xs12 md7 lg9 style="max-width: 600px">
                         <v-card elevation-10>
                         <v-form ref="login_form" @submit.prevent="register">
                             <v-card-title>
@@ -54,6 +54,7 @@
                             <v-card-text>
                                 <v-text-field
                                     label="Nama stand"
+                                    prefix="Stand"
                                     v-model="standName"
                                     :rules="[rules.required]"
                                     ref="name"

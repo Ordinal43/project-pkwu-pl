@@ -143,7 +143,7 @@ export default {
             },
             {
                 icon: "store_mall_directory",
-                title: "Edit stand",
+                title: "Tambah Menu",
                 route: "/my-stand",
                 for_admin: false,
             },
