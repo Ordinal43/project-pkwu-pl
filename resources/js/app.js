@@ -56,5 +56,8 @@ const app = new Vue({
     store,
     components: {
         AppRoot
-    }
+    },
+    beforeCreate() {
+		this.$store.commit('initialiseStore');
+	}
 });

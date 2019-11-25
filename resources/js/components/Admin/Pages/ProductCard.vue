@@ -1,9 +1,9 @@
 <template>
     <v-card class="rounded menu-card" height="100%">
         <div>
-        <v-img class="menu-img"
-        :src="item.image"
-        :aspect-ratio="16/9"
+            <v-img class="menu-img"
+            :src="item.image"
+            :aspect-ratio="16/9"
         ></v-img>
         
         <v-card-text class="text">
@@ -54,22 +54,10 @@ export default {
         }
     },
     methods: {
-        ...mapMutations({
-            addToCartVuex: 'addToCart',
-            removeFromCartVuex: 'removeFromCart',
-        }),
-        addToCart(item) {
-            // add item qty in this component
-            item.qty++;
-            // add item to vuex cart
-            this.addToCartVuex(item);
-        },
-        removeFromCart(item) {
-            // reduce item qty in this component
-            item.qty--;
-            // remove item from vuex cart
-            this.removeFromCartVuex(item);
-        },
+        ...mapMutations([
+            'addToCart',
+            'removeFromCart',
+        ]),
     },
 }
 </script>
