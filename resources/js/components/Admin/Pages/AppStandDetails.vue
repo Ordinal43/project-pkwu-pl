@@ -108,8 +108,7 @@
     </v-container>
 </template>
 <script>
-import { mapMutations } from 'vuex'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
     components: {
