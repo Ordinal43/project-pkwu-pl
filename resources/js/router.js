@@ -25,6 +25,11 @@ const routes = [
                         redirect: 'order-menu',
                     },
                     { 
+                        path: 'cart', 
+                        component: () => import('./components/Admin/Pages/AppCart' /* webpackChunkName: "js/chunk-app-order" */),
+                        meta: { forAdmin: false },
+                    },
+                    { 
                         path: 'order-menu', 
                         component: () => import('./components/Admin/Pages/AppOrder' /* webpackChunkName: "js/chunk-app-order" */),
                         meta: { forAdmin: false },

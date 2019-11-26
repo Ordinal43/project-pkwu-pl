@@ -136,7 +136,7 @@ export default {
     methods: {
         ...mapMutations({
             addToCartVuex: 'addToCart',
-            removeFromCartVuex: 'removeFromCart',
+            subtractFromCartVuex: 'subtractFromCart',
         }),
         async getStandDetails() {
             this.loading = true;
