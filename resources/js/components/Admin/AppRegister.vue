@@ -127,7 +127,7 @@ export default {
                     const code = err.response.status;
                     swal({
                         title: "Oops!",
-                        text: `Error [${code}]. Please try again later.`,
+                        text: `Error ${code}.`,
                         icon: "error",
                     });
                 }

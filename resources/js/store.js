@@ -83,7 +83,6 @@ export default new Vuex.Store({
                     title: "Hapus menu?",
                     text: "Menu ini akan dihapus dari keranjang anda.",
                     icon: "warning",
-                    dangerMode: true,
                     buttons: {
                         cancel: {
                             text: "Kembali",
