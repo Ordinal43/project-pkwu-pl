@@ -63,20 +63,20 @@
                         ></v-textarea>
                     </v-flex>
                     <v-flex xs12 md8>
-                        <v-text-field
+                        <v-input-number
                             label="Harga"
-                            v-model.number="price"
+                            v-model="price"
                             prefix="Rp"
                             suffix="/pcs"
-                            :rules="[rules.required, rules.number, rules.notZero, rules.tooMuch]"
-                        ></v-text-field>
+                            :rules="[rules.required, rules.tooMuch]"
+                        ></v-input-number>
                     </v-flex>
                     <v-flex xs12 md4>
-                        <v-text-field
+                        <v-input-number
                             label="Stok"
-                            v-model.number="stock"
-                            :rules="[rules.required, rules.number, rules.notZero, rules.tooMuch]"
-                        ></v-text-field>
+                            v-model="stock"
+                            :rules="[rules.required, rules.tooMuch]"
+                        ></v-input-number>
                     </v-flex>
                 </v-layout>
             </v-container>     
@@ -128,8 +128,6 @@ export default {
             this.$refs.file.click();
         },
         onFileChange(fieldName, file) {
-            console.log(fieldName);
-            
             let imageFile = file[0]
             if (file.length > 0) {
                 let size = imageFile.size / 1024 / 1024

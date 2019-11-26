@@ -6,6 +6,7 @@ import router from './router'
 import store from './store'
 import axios from 'axios'
 import '@mdi/font/css/materialdesignicons.css'
+import VInputNumber from './components/VInputNumber'
 
 window.EventBus = new Vue()
 window.axios = axios.create()
@@ -17,6 +18,8 @@ Vue.use(Vuetify, {
         primary: "#ff5722",
     }
 });
+
+Vue.component('VInputNumber', VInputNumber);
 
 Vue.prototype.$rupiahFormat = function(value) {
     value = parseFloat(value)
