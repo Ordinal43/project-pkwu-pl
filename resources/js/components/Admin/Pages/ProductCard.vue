@@ -16,30 +16,10 @@
         
         <v-card-actions v-if="item.units > 0">
             <v-spacer></v-spacer>
-            <v-btn color="primary" round flat v-show="!item.qty" @click="addToCart(item)">
+            <v-btn color="primary" round @click="addToCart(item)">
                 <v-icon left>add_shopping_cart</v-icon>
                 tambah
             </v-btn>
-            <div v-show="item.qty">
-                <v-layout align-center>
-                    <v-flex>
-                        <v-btn icon outline color="primary" 
-                        @click="removeFromCart(item)">
-                            <v-icon>remove</v-icon>
-                        </v-btn>
-                    </v-flex>
-                    <v-flex class="title">
-                        {{ item.qty }}
-                    </v-flex>
-                    <v-flex>
-                        <v-btn icon outline color="primary" 
-                        @click="addToCart(item)" 
-                        :disabled="item.qty >= item.units">
-                            <v-icon>add</v-icon>
-                        </v-btn>
-                    </v-flex>
-                </v-layout>
-            </div>
         </v-card-actions>
     </v-card>
 </template>
@@ -56,7 +36,6 @@ export default {
     methods: {
         ...mapMutations([
             'addToCart',
-            'removeFromCart',
         ]),
     },
 }
