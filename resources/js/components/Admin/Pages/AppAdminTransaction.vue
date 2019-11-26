@@ -22,7 +22,7 @@
                     <v-icon left>replay</v-icon>
                     muat ulang
                 </v-btn>
-                <v-btn color="success" @click="printOrders">
+                <v-btn color="success" @click="showPrint = true">
                     <v-icon left>print</v-icon>
                     cetak
                 </v-btn>
@@ -89,54 +89,19 @@
         </v-layout>
         </template>
 
-        <div v-show="false" id="printMe">
-            <div class="ma-3">
-                <div class="text-xs-center">
-                    <p class="headline">Laporan Riwayat Transaksi</p>
-                    <p class="title">Seluruh Stand</p>
-                </div>
-                <div>
-                    <table class="orders">
-                        <tr>
-                            <th>Id order</th>
-                            <th>Tanggal order</th>
-                            <th>Stand</th>
-                            <th>Menu</th>
-                            <th>Pelanggan</th>
-                            <th>Jumlah</th>
-                            <th>Harga</th>
-                            <th>Total</th>
-                        </tr>
-                        <template v-for="(item, i) in items">
-                            <tr :key="i">
-                                <td>{{ item.id }}</td>
-                                <td>{{ item.date }}</td>
-                                <td>{{ item.stand }}</td>
-                                <td>{{ item.menu }}</td>
-                                <td>{{ item.customer }}</td>
-                                <td class="text-xs-right">{{ item.qty }}</td>
-                                <td class="text-xs-right">{{ $rupiahFormat(item.price) }}</td>
-                                <td class="text-xs-right">{{ $rupiahFormat(item.total) }}</td>
-                            </tr>
-                        </template>
-                        <tfoot class="title">
-                            <tr>
-                                <td class="text-xs-right" colspan="6">Total produk terjual</td>
-                                <td>{{ getTotalSold }} item</td>
-                            </tr>
-                            <tr>
-                                <td class="text-xs-right" colspan="7">Total pendapatan</td>
-                                <td>{{ $rupiahFormat(getTotalEarnings) }}</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-        </div>
+        <template v-if="showPrint">
+            <print-transactions
+                :list="items"
+                @finished="showPrint = false"
+            ></print-transactions>
+        </template>
     </v-container>
 </template>
 <script>
 export default {
+    components: {
+        PrintTransactions: () => import('./PrintTransactions' /* webpackChunkName: "js/chunk-print-transactions" */),
+    },
     data: () => ({
         loading: false,
         headers: [
@@ -152,6 +117,7 @@ export default {
         ],
         items: [],
         dialogTransactionDetail: false,
+        showPrint: false,
     }),
     computed: {
         getTotalSold() {
@@ -214,9 +180,6 @@ export default {
                 }
             }
             
-        },
-        printOrders() {
-            this.$htmlToPaper('printMe');
         },
     },
     mounted() {

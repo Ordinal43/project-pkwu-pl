@@ -40,51 +40,27 @@
                     <td>{{ props.item.qty }}</td>
                     <td>{{ $rupiahFormat(props.item.price) }}</td>
                     <td>{{ $rupiahFormat(props.item.total) }}</td>
+                    <td v-if="isOngoing">
+                        <v-tooltip bottom>
+                            <template v-slot:activator="{ on }">
+                                <v-btn icon small color="success" v-on="on" @click="finishOrder(props.item)">
+                                    <v-icon>done</v-icon>
+                                </v-btn>
+                            </template>
+                            <span>Selesai</span>
+                        </v-tooltip>
+                        <v-tooltip bottom>
+                            <template v-slot:activator="{ on }">
+                                <v-btn icon small color="error" v-on="on" @click="cancelOrder(props.item)">
+                                    <v-icon>close</v-icon>
+                                </v-btn>
+                            </template>
+                            <span>Batalkan</span>
+                        </v-tooltip>
+                    </td>
                 </template>
             </v-data-table>
         </v-card>
-        <div v-show="false" id="printMe">
-            <div class="ma-3">
-                <div class="text-xs-center">
-                    <p class="headline">Laporan Riwayat Transaksi</p>
-                    <p class="title">Stand {{ $user.info().stands.stand_name }}</p>
-                </div>
-                <div>
-                    <table class="orders">
-                        <tr>
-                            <th>Id order</th>
-                            <th>Tanggal order</th>
-                            <th>Menu</th>
-                            <th>Pelanggan</th>
-                            <th>Jumlah</th>
-                            <th>Harga</th>
-                            <th>Total</th>
-                        </tr>
-                        <template v-for="(item, i) in items">
-                            <tr :key="i">
-                                <td>{{ item.id }}</td>
-                                <td>{{ item.date }}</td>
-                                <td>{{ item.menu }}</td>
-                                <td>{{ item.customer }}</td>
-                                <td>{{ item.qty }}</td>
-                                <td>{{ $rupiahFormat(item.price) }}</td>
-                                <td>{{ $rupiahFormat(item.total) }}</td>
-                            </tr>
-                        </template>
-                        <tfoot class="title">
-                            <tr>
-                                <td class="text-xs-right" colspan="6">Total produk terjual</td>
-                                <td>{{ getTotalSold }} item</td>
-                            </tr>
-                            <tr>
-                                <td class="text-xs-right" colspan="6">Total pendapatan</td>
-                                <td>{{ $rupiahFormat(getTotalEarnings) }}</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-        </div>
     </div>
 </template>
 <script>
@@ -97,7 +73,8 @@ export default {
         loading: {
             type: Boolean,
             required: true,
-        }
+        },
+        isOngoing : {},
     },
     data: () => ({
         headers: [
@@ -113,20 +90,107 @@ export default {
     computed: {
         getTotalSold() {
             return this.items.reduce((acc, item) => acc + item.qty, 0);
-        }, 
+        },
         getTotalEarnings() {
             return this.items.reduce((acc, item) => acc + item.total, 0);
-        }, 
+        }
     },
     methods: {
-        print() {
-            this.$htmlToPaper('printMe');
-        },
+        finishOrder({ id }) {
+            swal({
+                title: "Selesaikan order?",
+                text: "Order selesai tidak dapat dikembalikan lagi.",
+                icon: "warning",
+                buttons: {
+                    cancel: {
+                        text: "Kembali",
+                        value: false,
+                        visible: true,
+                        closeModal: true,
+                    },
+                    confirm: {
+                        text: "Selesaikan",
+                        value: true,
+                        visible: true,
+                        closeModal: false
+                    }
+                }
+            }).then(res => {
+                if(res) {
+                    axios.patch(`/api/ready/${id}`, null, {
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-type': 'application/json',
+                        }
+                    }).then(res => {
+                        swal({
+                            title: "Order selesai!",
+                            icon: "success",
+                            button: "Close",
+                        });
+                        this.$emit('fetchData');
+                    }).catch(err => {
+                        swal({
+                            title: "Oops!",
+                            text: `Error ${code}.`,
+                            icon: "error",
+                        });
+                    })
+                }
+            });
+        }, 
+        cancelOrder({ id }) {
+            swal({
+                title: "Batalkan order?",
+                text: "Order batal tidak dapat dikembalikan lagi.",
+                icon: "warning",
+                dangerMode: true,
+                buttons: {
+                    cancel: {
+                        text: "Kembali",
+                        value: false,
+                        visible: true,
+                        closeModal: true,
+                    },
+                    confirm: {
+                        text: "Batalkan",
+                        value: true,
+                        visible: true,
+                        closeModal: false
+                    }
+                }
+            }).then(res => {
+                if(res) {
+                    axios.patch(`/api/cancel/${id}`, null, {
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-type': 'application/json',
+                        }
+                    }).then(res => {
+                        swal({
+                            title: "Order dibatalkan!",
+                            icon: "success",
+                            button: "Close",
+                        });
+                        this.$emit('fetchData');
+                    }).catch(err => {
+                        const code = err.response.status;
+                        swal({
+                            title: "Oops!",
+                            text: `Error ${code}.`,
+                            icon: "error",
+                        });
+                    })
+                }
+            });
+        }
     },
     mounted() {
-        EventBus.$on('print_orders',() => {
-            this.$htmlToPaper('printMe');
-        }); 
+        if(this.isOngoing) {
+            this.headers.push({ 
+                text: 'Action', value: 'id', sortable: false 
+            })
+        }
     },
 }
 </script>

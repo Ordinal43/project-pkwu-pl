@@ -50,6 +50,8 @@
                             <stand-order-table
                                 :items="listOngoingOrders"
                                 :loading="loadingOngoingOrders"
+                                :isOngoing="true"
+                                @fetchData="fetchOngoingOrders"
                             ></stand-order-table>
                         </v-layout>
                     </v-container>
@@ -66,7 +68,7 @@
                                 <v-icon left>replay</v-icon>
                                 muat ulang
                             </v-btn>
-                            <v-btn color="success" @click="printFinishedOrders">
+                            <v-btn color="success" @click="showPrint = true">
                                 <v-icon left>print</v-icon>
                                 cetak
                             </v-btn>
@@ -79,8 +81,37 @@
                         </v-layout>
                     </v-container>
                 </v-tab-item>
+
+                <v-tab-item value="tab-2">
+                    <v-container grid-list-lg>
+                        <v-layout row align-center class="mt-2 mb-3">
+                            <div class="subheading font-weight-bold">
+                                Order Batal
+                            </div>
+                            <v-spacer></v-spacer>
+                            <v-btn color="primary" @click="fetchCanceledOrders" :loading="loadingCanceledOrders">
+                                <v-icon left>replay</v-icon>
+                                muat ulang
+                            </v-btn>
+                        </v-layout>
+                        <v-layout row wrap>
+                            <stand-order-table
+                                :items="listCanceledOrders"
+                                :loading="loadingCanceledOrders"
+                            ></stand-order-table>
+                        </v-layout>
+                    </v-container>
+                </v-tab-item>
             </v-tabs>
         </div>
+        
+        <template v-if="showPrint">
+            <print-transactions
+                :list="listFinishedOrders"
+                @finished="showPrint = false"
+            ></print-transactions>
+        </template>
+
     </v-container>
 </template>
 <script>
@@ -89,30 +120,41 @@ import { mapGetters, mapMutations } from 'vuex'
 export default {
     components: {
         StandOrderTable: () => import('./StandOrderTable' /* webpackChunkName: "js/chunk-stand-order-table" */),
+        PrintTransactions: () => import('./PrintTransactions' /* webpackChunkName: "js/chunk-print-transactions" */),
     },
     data: (vm) => ({
         activeTab: null,
         tabItems: [
             {name: "Order Berjalan", icon: "assignment"},
-            {name: "Order Selesai/Batal", icon: "assignment_turned_in"},
+            {name: "Order Selesai", icon: "assignment_turned_in"},
+            {name: "Order Batal", icon: "assignment_late"},
         ],
         stand: !!vm.$route.params.standId? vm.$route.params.standId : vm.$user.info().stands.id,
         loading: false,
         loadingOngoingOrders: false,
         loadingFinishedOrders: false,
+        loadingCanceledOrders: false,
         listOngoingOrders: [],
         listFinishedOrders: [],
+        listCanceledOrders: [],
+        showPrint: false,
     }),
     watch: {
         activeTab(val) {
-            if(val === "tab-0") this.fetchOngoingOrders();
-            if(val === "tab-1") this.fetchFinishedOrders();
+            switch(val) {
+                case "tab-0": this.fetchOngoingOrders()
+                    break;
+                case "tab-1": this.fetchFinishedOrders()
+                    break;
+                case "tab-2": this.fetchCanceledOrders()
+                    break;
+            }
         }
     },
     methods: {
         fetchOngoingOrders() {
             this.loadingOngoingOrders = true;
-            axios.get('/api/orders', {
+            axios.get('/api/orders-null', {
                 params: {
                     stand: this.stand
                 }
@@ -134,7 +176,7 @@ export default {
         },
         fetchFinishedOrders() {
             this.loadingFinishedOrders = true;
-            axios.get('/api/orders', {
+            axios.get('/api/orders-true', {
                 params: {
                     stand: this.stand
                 }
@@ -154,8 +196,27 @@ export default {
                 console.log(err);
             });
         },
-        printFinishedOrders() {
-            EventBus.$emit('print_orders');
+        fetchCanceledOrders() {
+            this.loadingCanceledOrders = true;
+            axios.get('/api/orders-false', {
+                params: {
+                    stand: this.stand
+                }
+            }).then(res => {
+                const tes = res.data.filter(item => !!item.product);
+                this.listCanceledOrders = tes.map(item => ({
+                    id: item.id,
+                    date: item.created_at,
+                    menu: item.product.name,
+                    customer: item.nota.customer,
+                    price: item.harga_satuan,
+                    qty: item.quantity,
+                    total: (item.quantity * item.harga_satuan)
+                }));
+                this.loadingCanceledOrders = false;
+            }).catch(err => {
+                console.log(err);
+            });
         },
     },
 }
