@@ -25,13 +25,13 @@ Route::patch('/cancel/{order}', 'OrderController@canceled');
 Route::patch('/ready/{order}', 'OrderController@ready');
 Route::get('/orders-all', 'OrderController@all'); //Return All Statement (True/ False/ Null)
 Route::get('/orders-all-true', 'OrderController@allTrue'); //Return All True
-Route::get('/orders-all-false', 'OrderController@allFalse'); //Return All True
-Route::get('/orders-all-null', 'OrderController@allNull'); //Return All True
-Route::get('/orders-true', 'OrderController@indexTrue'); //Return is_ready = True
-Route::get('/orders-false', 'OrderController@indexFalse'); //Return is_ready = False
-Route::get('/orders-null', 'OrderController@indexNull'); //Return is_ready = Null
+Route::get('/orders-all-false', 'OrderController@allFalse'); //Return All False
+Route::get('/orders-all-null', 'OrderController@allNull'); //Return All Null
+Route::get('/orders-true', 'OrderController@indexTrue'); //Return is_ready = True with stands param
+Route::get('/orders-false', 'OrderController@indexFalse'); //Return is_ready = False with stands param
+Route::get('/orders-null', 'OrderController@indexNull'); //Return is_ready = Null with stands param
 
-Route::resource('/orders', 'OrderController')->except(['all','indexTrue','indexFalse','indexNull','canceled', 'ready']);
+Route::resource('/orders', 'OrderController')->except(['allNull','allFalse','allTrue','all','indexTrue','indexFalse','indexNull','canceled', 'ready']);
 Route::resource('/nota', 'NotaController')->except(['show']);
 Route::resource('/stands', 'StandController')->except(['random']);
 Route::resource('/products', 'ProductController')->except(['random', 'uploadImage', 'update']);
