@@ -173,10 +173,15 @@ export default {
 
             if(willDelete) {
                 try {
-                    const res = await axios.delete(`/api/orders/${item.id}`);
+                    await axios.delete(`/api/orders/${item.id}`);
                     alert("Berhasil dihapus");
                 } catch (err) {
-                    console.log(err);
+                    const code = err.response.status;
+                    swal({
+                        title: "Oops!",
+                        text: `Error ${code}.`,
+                        icon: "error",
+                    });
                 }
             }
             

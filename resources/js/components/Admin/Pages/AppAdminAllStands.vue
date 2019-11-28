@@ -102,10 +102,15 @@ export default {
             const willDelete = confirm("Anda yakin ingin menghapus?");
             if(willDelete) {
                 try {
-                    const res = await axios.delete(`/api/stands/${id}`, null);
+                    await axios.delete(`/api/stands/${id}`, null);
                     this.getStands();
                 } catch (err) {
-                    console.log(err);
+                    const code = err.response.status;
+                    swal({
+                        title: "Oops!",
+                        text: `Error ${code}.`,
+                        icon: "error",
+                    });
                 }
             }
         },

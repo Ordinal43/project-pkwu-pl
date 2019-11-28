@@ -130,6 +130,7 @@ export default {
                         });
                         this.$emit('fetchData');
                     }).catch(err => {
+                        const code = err.response.status;
                         swal({
                             title: "Oops!",
                             text: `Error ${code}.`,

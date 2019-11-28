@@ -185,14 +185,23 @@ export default {
             });
 
             if(willDelete) {
-                await axios.delete(`/api/products/${id}`, null);
-                swal({
-                    title: "Success!",
-                    text: "Menu berhasil dihapus!",
-                    icon: "success",
-                    button: "Close",
-                });
-                this.getStandDetails();
+                try {
+                    await axios.delete(`/api/products/${id}`, null);
+                    swal({
+                        title: "Success!",
+                        text: "Menu berhasil dihapus!",
+                        icon: "success",
+                        button: "Close",
+                    });
+                    this.getStandDetails();
+                } catch (err) {
+                    const code = err.response.status;
+                    swal({
+                        title: "Oops!",
+                        text: `Error ${code}.`,
+                        icon: "error",
+                    });
+                }
             }
         },
         closeProduct() {
