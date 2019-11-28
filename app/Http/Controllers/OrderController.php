@@ -100,6 +100,40 @@ class OrderController extends Controller
             ])->where('is_ready', true)->orderBy('id','DESC')->get(),200);
     }
 
+    public function allFalse()
+    {
+        return response()->json(Order::with([
+            'Nota' => function($query)
+            {
+                $query->select('id','customer');
+            },
+            'Product'=> function($query){
+                $query->withTrashed();
+            },
+            'Product.Stand'=>function($query){
+                $query->withTrashed();
+                $query->select('id', 'stand_name');
+            }
+            ])->where('is_ready', false)->orderBy('id','DESC')->get(),200);
+    }
+
+    public function allNull()
+    {
+        return response()->json(Order::with([
+            'Nota' => function($query)
+            {
+                $query->select('id','customer');
+            },
+            'Product'=> function($query){
+                $query->withTrashed();
+            },
+            'Product.Stand'=>function($query){
+                $query->withTrashed();
+                $query->select('id', 'stand_name');
+            }
+            ])->where('is_ready', null)->orderBy('id','DESC')->get(),200);
+    }
+
     
     public function store(Request $request)
     {

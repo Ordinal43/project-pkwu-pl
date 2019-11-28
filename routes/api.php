@@ -25,6 +25,8 @@ Route::patch('/cancel/{order}', 'OrderController@canceled');
 Route::patch('/ready/{order}', 'OrderController@ready');
 Route::get('/orders-all', 'OrderController@all'); //Return All Statement (True/ False/ Null)
 Route::get('/orders-all-true', 'OrderController@allTrue'); //Return All True
+Route::get('/orders-all-false', 'OrderController@allFalse'); //Return All True
+Route::get('/orders-all-null', 'OrderController@allNull'); //Return All True
 Route::get('/orders-true', 'OrderController@indexTrue'); //Return is_ready = True
 Route::get('/orders-false', 'OrderController@indexFalse'); //Return is_ready = False
 Route::get('/orders-null', 'OrderController@indexNull'); //Return is_ready = Null
