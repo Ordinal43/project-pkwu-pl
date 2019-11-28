@@ -1,7 +1,7 @@
 <template>
-    <v-container grid-list-lg class="my-3">
+    <v-container grid-list-lg>
         <v-layout row wrap v-if="loading">
-            <v-flex xs12 class="text-xs-center" v-if="loading">
+            <v-flex xs12 class="text-xs-center">
                 <v-progress-circular
                     :size="70"
                     :width="7"
@@ -10,182 +10,209 @@
                 ></v-progress-circular>
             </v-flex>
         </v-layout>
-        <template v-else>
-        <v-layout row wrap>
-            <v-flex xs12>
-            <v-layout align-center>
-                <v-flex>
-                    <p class="headline primary--text">Semua Transaksi</p>
-                </v-flex>
-                <v-spacer></v-spacer>
-                <v-btn color="primary" @click="getAllOrders">
-                    <v-icon left>replay</v-icon>
-                    muat ulang
-                </v-btn>
-                <v-btn color="success" @click="showPrint = true">
-                    <v-icon left>print</v-icon>
-                    cetak
-                </v-btn>
-            </v-layout>
-            </v-flex>
-            <v-flex xs12>
-                <v-card>
-                    <v-container grid-list-lg>
-                    <v-layout row wrap>
-                        <v-flex xs12 md6>
-                            <v-card color="blue-grey darken-3" dark>
-                                <v-card-text>
-                                    <p class="subheading">Total Produk Terjual</p>
-                                    <div class="headline">
-                                        {{ getTotalSold }} item
-                                    </div>
-                                </v-card-text>
-                            </v-card>
-                        </v-flex>
-                        <v-flex xs12 md6>
-                            <v-card color="blue-grey darken-3" dark>
-                                <v-card-text>
-                                    <p class="subheading">Total Pendapatan</p>
-                                    <div class="headline">
-                                        {{ $rupiahFormat(getTotalEarnings) }}
-                                    </div>
-                                </v-card-text>
-                            </v-card>
-                        </v-flex>
+        <div v-show="!loading">
+            <v-layout row align-center>
+                <div class="ml-4">
+                    <v-layout row wrap align-center>
+                        <span class="headline font-weight-bold mr-1">
+                            Daftar Transaksi
+                        </span>
                     </v-layout>
-                </v-container>
-                    <v-data-table
-                        :headers="headers"
-                        :items="items"
-                        disable-initial-sort
-                        :loading="loading"
-                        rows-per-page-text="Baris per halaman"
-                    >
-                        <template v-slot:items="props">
-                            <td>{{ props.item.id }}</td>
-                            <td>{{ props.item.date }}</td>
-                            <td>{{ props.item.stand }}</td>
-                            <td>{{ props.item.menu }}</td>
-                            <td>{{ props.item.customer }}</td>
-                            <td class="text-xs-right">{{ props.item.qty }}</td>
-                            <td class="text-xs-right">{{ $rupiahFormat(props.item.price) }}</td>
-                            <td class="text-xs-right">{{ !!props.item.status? $rupiahFormat(props.item.total) : "-" }}</td>
-                            <td>{{ getStatus(props.item) }}</td>
-                        </template>
-                    </v-data-table>
-                </v-card>
-            </v-flex>
-        </v-layout>
-        </template>
+                </div>
+            </v-layout>
+            <v-divider class="my-4"></v-divider>
+            <v-tabs
+                icons-and-text
+                v-model="activeTab" color="transparent"
+                slider-color="primary"
+            >
+                <v-tab
+                    v-for="(item, i) in tabItems"
+                    :key="i" ripple
+                    :href="`#tab-${i}`"
+                >
+                    {{ item.name }}
+                    <v-icon>{{ item.icon }}</v-icon>
+                </v-tab>
+                <v-tab-item value="tab-0">
+                    <v-container grid-list-lg>
+                        <v-layout row align-center class="mt-2 mb-3">
+                            <div class="subheading font-weight-bold">
+                                Order Berjalan
+                            </div>
+                            <v-spacer></v-spacer>
+                            <v-btn color="primary" @click="fetchOngoingOrders" :loading="loadingOngoingOrders">
+                                <v-icon left>replay</v-icon>
+                                muat ulang
+                            </v-btn>
+                        </v-layout>
+                        <v-layout row wrap>
+                            <stand-order-table
+                                :items="listOngoingOrders"
+                                :loading="loadingOngoingOrders"
+                                @fetchData="fetchOngoingOrders"
+                                :hideSummary="true"
+                                :isAdmin="true"
+                            ></stand-order-table>
+                        </v-layout>
+                    </v-container>
+                </v-tab-item>
 
+                <v-tab-item value="tab-1">
+                    <v-container grid-list-lg>
+                        <v-layout row align-center class="mt-2 mb-3">
+                            <div class="subheading font-weight-bold">
+                                Order Selesai
+                            </div>
+                            <v-spacer></v-spacer>
+                            <v-btn color="primary" @click="fetchFinishedOrders" :loading="loadingFinishedOrders">
+                                <v-icon left>replay</v-icon>
+                                muat ulang
+                            </v-btn>
+                            <v-btn color="success" @click="showPrint = true">
+                                <v-icon left>print</v-icon>
+                                cetak
+                            </v-btn>
+                        </v-layout>
+                        <v-layout row wrap>
+                            <stand-order-table
+                                :items="listFinishedOrders"
+                                :loading="loadingFinishedOrders"
+                                :isAdmin="true"
+                            ></stand-order-table>
+                        </v-layout>
+                    </v-container>
+                </v-tab-item>
+
+                <v-tab-item value="tab-2">
+                    <v-container grid-list-lg>
+                        <v-layout row align-center class="mt-2 mb-3">
+                            <div class="subheading font-weight-bold">
+                                Order Batal
+                            </div>
+                            <v-spacer></v-spacer>
+                            <v-btn color="primary" @click="fetchCanceledOrders" :loading="loadingCanceledOrders">
+                                <v-icon left>replay</v-icon>
+                                muat ulang
+                            </v-btn>
+                        </v-layout>
+                        <v-layout row wrap>
+                            <stand-order-table
+                                :items="listCanceledOrders"
+                                :loading="loadingCanceledOrders"
+                                :hideSummary="true"
+                                :isAdmin="true"
+                            ></stand-order-table>
+                        </v-layout>
+                    </v-container>
+                </v-tab-item>
+            </v-tabs>
+        </div>
+        
         <template v-if="showPrint">
             <print-transactions
-                :list="items"
+                :list="listFinishedOrders"
                 @finished="showPrint = false"
                 :isAdmin="true"
             ></print-transactions>
         </template>
+
     </v-container>
 </template>
 <script>
+import { mapGetters, mapMutations } from 'vuex'
+
 export default {
     components: {
+        StandOrderTable: () => import('./StandOrderTable' /* webpackChunkName: "js/chunk-stand-order-table" */),
         PrintTransactions: () => import('./PrintTransactions' /* webpackChunkName: "js/chunk-print-transactions" */),
     },
-    data: () => ({
-        loading: false,
-        headers: [
-            { text: 'ID', value: 'id', sortable: false },
-            { text: 'Tgl order', value: 'date' },
-            { text: 'Nama stand', value: 'stand'},
-            { text: 'Nama menu', value: 'menu', sortable: false  },
-            { text: 'Pelanggan', value: 'customer', sortable: false },
-            { text: 'Jumlah', value: 'qty' },
-            { text: 'Harga', value: 'price' },
-            { text: 'Total', value: 'total' },
-            { text: 'Status', value: 'status' },
+    data: (vm) => ({
+        activeTab: null,
+        tabItems: [
+            {name: "Order Berjalan", icon: "assignment"},
+            {name: "Order Selesai", icon: "assignment_turned_in"},
+            {name: "Order Batal", icon: "assignment_late"},
         ],
-        items: [],
-        dialogTransactionDetail: false,
+        loading: false,
+        loadingOngoingOrders: false,
+        loadingFinishedOrders: false,
+        loadingCanceledOrders: false,
+        listOngoingOrders: [],
+        listFinishedOrders: [],
+        listCanceledOrders: [],
         showPrint: false,
     }),
-    computed: {
-        getTotalSold() {
-            return this.items.reduce((acc, item) => 
-                acc + (!!item.status? item.qty : 0)
-            , 0);
-        }, 
-        getTotalEarnings() {
-            return this.items.reduce((acc, item) => acc + item.total, 0);
-        },
+    watch: {
+        activeTab(val) {
+            switch(val) {
+                case "tab-0": this.fetchOngoingOrders()
+                    break;
+                case "tab-1": this.fetchFinishedOrders()
+                    break;
+                case "tab-2": this.fetchCanceledOrders()
+                    break;
+            }
+        }
     },
     methods: {
-        getStatus({ status }) {
-            if(status == null) {
-                return "Berjalan";
-            } else {
-                return !!status? "Selesai" : "Batal";
-            }
-        },
-        async getAllOrders() {
-            this.loading = true;
-            try {
-                const res = await axios.get('/api/orders-all');
-                this.items = res.data.map(item => ({
+        fetchOngoingOrders() {
+            this.loadingOngoingOrders = true;
+            axios.get('/api/orders-all-null').then(res => {
+                const tes = res.data.filter(item => !!item.product);
+                this.listOngoingOrders = tes.map(item => ({
                     id: item.id,
+                    stand_name: item.product.stand.stand_name,
                     date: item.created_at,
-                    stand: item.product.stand.stand_name,
                     menu: item.product.name,
                     customer: item.nota.customer,
                     price: item.harga_satuan,
                     qty: item.quantity,
-                    total: !!item.is_ready? (item.quantity * item.harga_satuan) : 0,
-                    status: item.is_ready,
+                    total: (item.quantity * item.harga_satuan)
                 }));
-            } catch (err) {
+                this.loadingOngoingOrders = false;
+            }).catch(err => {
                 console.log(err);
-            }
-            this.loading = false;
+            });
         },
-        async cancelTransaction(item) {
-            const willDelete = await swal({
-                title: `Yakin ingin menghapus item ${item.id}?`,
-                icon: "warning",
-                closeOnClickOutside: false,
-                buttons: {
-                    cancel: {
-                        text: "TIDAK",
-                        value: false,
-                        visible: true,
-                        closeModal: true,
-                    },
-                    confirm: {
-                        text: "YA",
-                        value: true,
-                        visible: true,
-                        closeModal: true
-                    }
-                }
-            })
-
-            if(willDelete) {
-                try {
-                    await axios.delete(`/api/orders/${item.id}`);
-                    alert("Berhasil dihapus");
-                } catch (err) {
-                    const code = err.response.status;
-                    swal({
-                        title: "Oops!",
-                        text: `Error ${code}.`,
-                        icon: "error",
-                    });
-                }
-            }
-            
+        fetchFinishedOrders() {
+            this.loadingFinishedOrders = true;
+            axios.get('/api/orders-all-true').then(res => {
+                const tes = res.data.filter(item => !!item.product);
+                this.listFinishedOrders = tes.map(item => ({
+                    id: item.id,
+                    stand_name: item.product.stand.stand_name,
+                    date: item.created_at,
+                    menu: item.product.name,
+                    customer: item.nota.customer,
+                    price: item.harga_satuan,
+                    qty: item.quantity,
+                    total: (item.quantity * item.harga_satuan)
+                }));
+                this.loadingFinishedOrders = false;
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        fetchCanceledOrders() {
+            this.loadingCanceledOrders = true;
+            axios.get('/api/orders-all-false').then(res => {
+                const tes = res.data.filter(item => !!item.product);
+                this.listCanceledOrders = tes.map(item => ({
+                    id: item.id,
+                    stand_name: item.product.stand.stand_name,
+                    date: item.created_at,
+                    menu: item.product.name,
+                    customer: item.nota.customer,
+                    price: item.harga_satuan,
+                    qty: item.quantity,
+                    total: (item.quantity * item.harga_satuan)
+                }));
+                this.loadingCanceledOrders = false;
+            }).catch(err => {
+                console.log(err);
+            });
         },
     },
-    mounted() {
-        this.getAllOrders();
-    }
 }
 </script>

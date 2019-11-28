@@ -34,6 +34,7 @@
             >
                 <template v-slot:items="props">
                     <td>{{ props.item.date }}</td>
+                    <td v-if="isAdmin">{{ props.item.stand_name }}</td>
                     <td>{{ props.item.menu }}</td>
                     <td>{{ props.item.customer }}</td>
                     <td>{{ props.item.qty }}</td>
@@ -64,18 +65,7 @@
 </template>
 <script>
 export default {
-    props: {
-        items: {
-            type: Array,
-            required: true,
-        },
-        loading: {
-            type: Boolean,
-            required: true,
-        },
-        isOngoing: {},
-        hideSummary: {},
-    },
+    props: ['items', 'loading', 'isOngoing', 'hideSummary', 'isAdmin'],
     data: () => ({
         headers: [
             { text: 'Tgl order', value: 'date' },
@@ -190,6 +180,12 @@ export default {
             this.headers.push({ 
                 text: 'Action', value: 'id', sortable: false 
             })
+        }
+
+        if(this.isAdmin) {
+            this.headers.splice(1, 0, { 
+                text: 'Stand', value: 'stand_name' 
+            });
         }
     },
 }
