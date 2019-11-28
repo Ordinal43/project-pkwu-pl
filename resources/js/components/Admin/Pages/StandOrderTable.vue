@@ -1,7 +1,7 @@
 <template>
     <div style="width: 100%">
         <v-card>
-            <v-container grid-list-lg>
+            <v-container grid-list-lg v-if="!hideSummary">
                 <v-layout row wrap>
                     <v-flex xs12 md6>
                         <v-card color="blue-grey darken-3" dark>
@@ -74,7 +74,8 @@ export default {
             type: Boolean,
             required: true,
         },
-        isOngoing : {},
+        isOngoing: {},
+        hideSummary: {},
     },
     data: () => ({
         headers: [

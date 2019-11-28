@@ -52,6 +52,7 @@
                                 :loading="loadingOngoingOrders"
                                 :isOngoing="true"
                                 @fetchData="fetchOngoingOrders"
+                                :hideSummary="true"
                             ></stand-order-table>
                         </v-layout>
                     </v-container>
@@ -98,6 +99,7 @@
                             <stand-order-table
                                 :items="listCanceledOrders"
                                 :loading="loadingCanceledOrders"
+                                :hideSummary="true"
                             ></stand-order-table>
                         </v-layout>
                     </v-container>
