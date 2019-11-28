@@ -3,7 +3,7 @@
         <div class="ma-3">
             <div class="text-xs-center">
                 <p class="headline">Laporan Riwayat Transaksi</p>
-                <p class="title" v-if="isAdmin">
+                <p class="title" v-if="!isAdmin">
                     Stand {{ $user.info().stands.stand_name }}
                 </p>
             </div>
