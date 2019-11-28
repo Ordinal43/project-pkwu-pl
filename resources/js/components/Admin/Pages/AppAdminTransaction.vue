@@ -82,6 +82,7 @@
             <print-transactions
                 :list="items"
                 @finished="showPrint = false"
+                :isAdmin="true"
             ></print-transactions>
         </template>
     </v-container>

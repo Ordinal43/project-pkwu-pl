@@ -3,7 +3,9 @@
         <div class="ma-3">
             <div class="text-xs-center">
                 <p class="headline">Laporan Riwayat Transaksi</p>
-                <p class="title">Stand {{ $user.info().stands.stand_name }}</p>
+                <p class="title" v-if="isAdmin">
+                    Stand {{ $user.info().stands.stand_name }}
+                </p>
             </div>
             <div>
                 <table class="orders">
@@ -44,7 +46,7 @@
 </template>
 <script>
 export default {
-    props: ['list'],
+    props: ['list', 'isAdmin'],
     mounted() {
         this.$htmlToPaper('printMe', () => {
             this.$emit('finished'); 
