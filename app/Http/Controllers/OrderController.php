@@ -29,6 +29,7 @@ class OrderController extends Controller
         return response()->json(Order::with(['Nota:id,customer', 'Product:id,name'])->get(),200);
     }
 
+
     public function indexFalse(Request $request)
     {
         if ($request->has('stand')) {
@@ -80,6 +81,23 @@ class OrderController extends Controller
                 $query->select('id', 'stand_name');
             }
             ])->orderBy('id','DESC')->get(),200);
+    }
+
+    public function allTrue()
+    {
+        return response()->json(Order::with([
+            'Nota' => function($query)
+            {
+                $query->select('id','customer');
+            },
+            'Product'=> function($query){
+                $query->withTrashed();
+            },
+            'Product.Stand'=>function($query){
+                $query->withTrashed();
+                $query->select('id', 'stand_name');
+            }
+            ])->where('is_ready', true)->orderBy('id','DESC')->get(),200);
     }
 
     
