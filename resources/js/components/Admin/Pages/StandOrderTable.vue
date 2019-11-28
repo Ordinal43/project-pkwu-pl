@@ -33,7 +33,6 @@
                 rows-per-page-text="Baris per halaman"
             >
                 <template v-slot:items="props">
-                    <td>{{ props.item.id }}</td>
                     <td>{{ props.item.date }}</td>
                     <td>{{ props.item.menu }}</td>
                     <td>{{ props.item.customer }}</td>
@@ -79,7 +78,6 @@ export default {
     },
     data: () => ({
         headers: [
-            { text: 'ID', value: 'id', sortable: false },
             { text: 'Tgl order', value: 'date' },
             { text: 'Nama menu', value: 'menu', sortable: false  },
             { text: 'Pelanggan', value: 'customer', sortable: false },
