@@ -84,6 +84,7 @@
                         <v-card-title>
                             <v-btn 
                                 color="primary" large round block
+                                @click="openDialogConfirm"
                             >
                                 Beli ({{ getMenuAmount }})
                             </v-btn>
@@ -115,6 +116,15 @@
                 </v-flex>
             </template>
         </v-layout>
+
+        <v-dialog
+            v-model="dialogConfirmPayment"
+            lazy max-width="600"
+        >
+            <dialog-confirm-payment
+                @close="dialogConfirmPayment = false"
+            ></dialog-confirm-payment>
+        </v-dialog>
     </v-container>
 </template>
 
@@ -122,6 +132,12 @@
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 
 export default {
+    components: {
+        DialogConfirmPayment: () => import('./DialogConfirmPayment' /* webpackChunkName: "js/dialog-confirm-payment" */) 
+    },
+    data: () => ({
+        dialogConfirmPayment: false,
+    }),
     computed: {
         ...mapGetters([
             'getCartItems'
@@ -145,6 +161,9 @@ export default {
             'addToCart',
             'subtractFromCart',
         ]),
+        openDialogConfirm() {
+            this.dialogConfirmPayment = true;
+        }
     },
 }
 </script>

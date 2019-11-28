@@ -68,7 +68,7 @@ export default new Vuex.Store({
                 state.cartItems.splice(inCartIdx, 1);
             }
         },
-        emptyCart() {
+        emptyCart(state) {
             state.cartItems = [];
         },
     },
@@ -104,33 +104,34 @@ export default new Vuex.Store({
                 });
             }
         },
-        async makeOrder({ commit, state }, name) {
-            const total = state.cartItems.reduce((acc, item) => 
-                acc + (item.price * item.qty)
-            , 0)
-
-            const data = state.cartItems.map(
-                (item) => ({
-                    product_id: item.id,
-                    harga_satuan: item.price,
-                    quantity: item.qty
+        makeOrder({ state }, name) {
+            return new Promise((resolve, reject) => {
+                const total = state.cartItems.reduce((acc, item) => 
+                    acc + (item.price * item.qty)
+                , 0)
+    
+                const data = state.cartItems.map(
+                    (item) => ({
+                        product_id: item.id,
+                        harga_satuan: item.price,
+                        quantity: item.qty
+                    })
+                );
+    
+                axios.post('/api/nota', {
+                    customer: name,
+                    harga_total: total,
+                    products: data
+                },{
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-type': 'application/json',
+                    }
+                }).then(res => {
+                    resolve(res);
+                }).catch(err => {
+                    reject(err);
                 })
-            );
-
-            axios.post('/api/nota', {
-                customer: name,
-                harga_total: total,
-                products: data
-            },{
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-type': 'application/json',
-                }
-            }).then(res => {
-                commit('emptyCart');
-                return Promise.resolve(res);
-            }).catch(err => {
-                return Promise.reject(err);
             })
         },
     }
