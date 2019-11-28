@@ -110,7 +110,9 @@ export default {
     }),
     computed: {
         getTotalSold() {
-            return this.items.reduce((acc, item) => acc + item.qty, 0);
+            return this.items.reduce((acc, item) => 
+                acc + (!!item.status? item.qty : 0)
+            , 0);
         }, 
         getTotalEarnings() {
             return this.items.reduce((acc, item) => acc + item.total, 0);
