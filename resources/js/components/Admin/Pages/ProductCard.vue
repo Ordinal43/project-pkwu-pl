@@ -16,7 +16,7 @@
         
         <v-card-actions v-if="item.units > 0">
             <v-spacer></v-spacer>
-            <v-btn color="primary" round @click="addToCart(item)"
+            <v-btn color="primary" round @click="$emit('addItem', item)"
                 :disabled="isEnough"
             >
                 <v-icon left>add_shopping_cart</v-icon>
@@ -26,7 +26,7 @@
     </v-card>
 </template>
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
     props: {
@@ -46,12 +46,7 @@ export default {
             } else {
                 return false;
             }
-        }
-    },
-    methods: {
-        ...mapMutations([
-            'addToCart',
-        ]),
+        },
     },
 }
 </script>
