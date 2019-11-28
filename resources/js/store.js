@@ -11,7 +11,7 @@ const cartListener = store => {
             mutation.type === 'removeFromCart') {
             localStorage.setItem(CART_KEY, JSON.stringify(state.cartItems))
         } else if(mutation.type === 'emptyCart') {
-            localStorage.removeItem('bazaar-pl-user');
+            localStorage.removeItem(CART_KEY);
         }
     })
 }
