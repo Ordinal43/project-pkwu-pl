@@ -69,19 +69,8 @@
                             <td>{{ props.item.customer }}</td>
                             <td class="text-xs-right">{{ props.item.qty }}</td>
                             <td class="text-xs-right">{{ $rupiahFormat(props.item.price) }}</td>
-                            <td class="text-xs-right">{{ $rupiahFormat(props.item.total) }}</td>
-                            <td>
-                                <v-tooltip bottom>
-                                    <template v-slot:activator="{ on }">
-                                        <v-btn icon flat color="red" slot="activator" v-on="on" 
-                                        @click="cancelTransaction(props.item)"
-                                        >
-                                            <v-icon>delete</v-icon>
-                                        </v-btn>
-                                    </template>
-                                    <span>Hapus</span>
-                                </v-tooltip>
-                            </td>
+                            <td class="text-xs-right">{{ !!props.item.status? $rupiahFormat(props.item.total) : "-" }}</td>
+                            <td>{{ getStatus(props.item) }}</td>
                         </template>
                     </v-data-table>
                 </v-card>
@@ -113,7 +102,7 @@ export default {
             { text: 'Jumlah', value: 'qty' },
             { text: 'Harga', value: 'price' },
             { text: 'Total', value: 'total' },
-            { text: 'Action', value: 'total', sortable: false },
+            { text: 'Status', value: 'status' },
         ],
         items: [],
         dialogTransactionDetail: false,
@@ -125,25 +114,30 @@ export default {
         }, 
         getTotalEarnings() {
             return this.items.reduce((acc, item) => acc + item.total, 0);
-        }, 
+        },
     },
     methods: {
-        fetchAllOrders() {
-            return axios.get('/api/orders-all');
+        getStatus({ status }) {
+            if(status == null) {
+                return "Berjalan";
+            } else {
+                return !!status? "Selesai" : "Batal";
+            }
         },
         async getAllOrders() {
             this.loading = true;
             try {
-                const res = await this.fetchAllOrders();
+                const res = await axios.get('/api/orders-all');
                 this.items = res.data.map(item => ({
                     id: item.id,
                     date: item.created_at,
-                    stand: item.product.stand.name,
+                    stand: item.product.stand.stand_name,
                     menu: item.product.name,
                     customer: item.nota.customer,
                     price: item.harga_satuan,
                     qty: item.quantity,
-                    total: (item.quantity * item.harga_satuan)
+                    total: !!item.is_ready? (item.quantity * item.harga_satuan) : 0,
+                    status: item.is_ready,
                 }));
             } catch (err) {
                 console.log(err);
