@@ -79,7 +79,7 @@ class OrderController extends Controller
                 $query->withTrashed();
                 $query->select('id', 'stand_name');
             }
-            ])->get(),200);
+            ])->orderBy('id','DESC')->get(),200);
     }
 
     
