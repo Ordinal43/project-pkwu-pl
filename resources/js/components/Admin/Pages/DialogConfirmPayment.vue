@@ -9,6 +9,7 @@
             <v-form ref="formConfirm">
                 <v-text-field
                     label="Nama"
+                    autofocus
                     v-model="name"
                     :rules="[rules.required]"
                 ></v-text-field>
@@ -103,7 +104,7 @@ export default {
         finishOrder() {
             this.$router.replace({path: '/'});
             this.emptyCart();
-        }
+        },
     },
 }
 </script>
