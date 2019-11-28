@@ -16,7 +16,9 @@
         
         <v-card-actions v-if="item.units > 0">
             <v-spacer></v-spacer>
-            <v-btn color="primary" round @click="addToCart(item)">
+            <v-btn color="primary" round @click="addToCart(item)"
+                :disabled="isEnough"
+            >
                 <v-icon left>add_shopping_cart</v-icon>
                 tambah
             </v-btn>
@@ -24,13 +26,26 @@
     </v-card>
 </template>
 <script>
-import { mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
     props: {
         item: {
             type: Object,
             required: true,
+        }
+    },
+    computed: {
+        ...mapGetters([
+            'getCartItems'
+        ]),
+        isEnough() {
+            let current = this.getCartItems.find(o => o.id === this.item.id);
+            if(!!current) {
+                return current.qty >= this.item.units; 
+            } else {
+                return false;
+            }
         }
     },
     methods: {
