@@ -15,6 +15,13 @@ class ProductController extends Controller
         return response()->json(Product::inRandomOrder()->take(3)->get(),200);
     }
 
+    public function allProduct(){
+        return response()->json(Product::select('id','name','units','image','price','stand_id')
+        ->with([
+            'Stand:id,stand_name'
+            ])->get(),200);
+    }
+
     public function index()
     {
         return response()->json(Product::all(), 200);

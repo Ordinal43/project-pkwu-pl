@@ -18,6 +18,7 @@ Route::patch('users/{user}','UserController@update');
 //Random API
 Route::get('/stands/random', 'StandController@random');
 Route::get('/products/random', 'ProductController@random');
+Route::get('/products/all', 'ProductController@allProduct');
 
 //Nota&Order
 Route::get('/nota/{nota}', 'NotaController@show');
