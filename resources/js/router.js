@@ -8,13 +8,17 @@ const routes = [
         path:'/',
         component: () => import('./components/RootAdmin' /* webpackChunkName: "js/chunk-root-admin" */),
         children: [
-            { 
+            {
                 path: '/login', 
                 component: () => import('./components/Admin/AppLogin' /* webpackChunkName: "js/chunk-app-login" */),
             },
-            { 
+            {
                 path: '/register', 
                 component: () => import('./components/Admin/AppRegister' /* webpackChunkName: "js/chunk-app-register" */), 
+            },
+            {
+                path: '/etalase', 
+                component: () => import('./components/StoreFront' /* webpackChunkName: "js/chunk-store-front" */), 
             },
             { 
                 path: '', 
@@ -78,6 +82,12 @@ const router = new VueRouter({
 
 import User from './helpers/User';
 
+const NOLOGINPATHS = [
+    "/login",
+    "/register",
+    "/etalase",
+];
+
 router.beforeEach(async (to, from, next) => {
     if(to.matched.some(route => route.meta.requiresAuth)) {
         if(!User.loggedIn()) {
@@ -103,7 +113,7 @@ router.beforeEach(async (to, from, next) => {
         }
     }
     
-    if(to.path === "/login" || to.path === "/register") {
+    if(NOLOGINPATHS.includes(to.path)) {
         if(User.loggedIn()) {
             next({path: '/', replace: true})
             return
