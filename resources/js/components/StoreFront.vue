@@ -1,11 +1,12 @@
 <template>
     <div>
-        <div style="height: 20vh" class="pa-2">
+        <div style="height: 20vh" class="pa-3">
             <v-img
                 src="/assets/logo-pkwu.png"
                 contain
                 position="center right"
-                height="100%"
+                height="80%"
+                @click="$router.push('/')"
             ></v-img>
         </div>
         <div style="height: 80vh">

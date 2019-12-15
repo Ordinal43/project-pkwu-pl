@@ -2,7 +2,7 @@
     <v-app>
         <v-content>
             <v-container grid-list-lg fill-height>
-                <v-layout row wrap justify-center align-center>
+                <v-layout row wrap justify-center align-content-center>
                     <v-flex xs12 md5 lg3>
                         <v-img
                             src="/assets/logo-pkwu.png"
@@ -43,6 +43,11 @@
                             </v-card-text>
                         </v-form>
                         </v-card>
+                    </v-flex>
+                    <v-flex xs12 class="text-xs-center">
+                        <v-btn color="primary" round large outline @click="$router.push('/etalase')">
+                            Ke Etalase
+                        </v-btn>
                     </v-flex>
                 </v-layout>
             </v-container>
