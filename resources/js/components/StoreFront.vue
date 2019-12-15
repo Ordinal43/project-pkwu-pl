@@ -1,44 +1,92 @@
 <template>
-    <div style="height: 100vh">
-        <v-layout
-            row wrap align-center style="height: 100%"
-            fill-height 
-            v-if="isLoading"
-        >
-            <v-flex xs12 class="text-xs-center">
-                <v-progress-circular
-                    :size="100"
-                    :width="7"
-                    color="primary"
-                    indeterminate
-                ></v-progress-circular>
-            </v-flex>
-        </v-layout>
-        <v-layout 
-            row wrap justify-center align-content-center 
-            fill-height style="height: 100%" v-else
-        >
-            <carousel-3d
-                :autoplay="true"
-                :autoplayHoverPause="true"
-                :autoplayTimeout="3000"
-                :clickable="false"
-                :disable3d="true"
-                border="0"
-                width="400"
-                height="300"
-                space="410"
-                @before-slide-change="getRandomMenu"
+    <div>
+        <div style="height: 20vh" class="pa-2">
+            <v-img
+                src="/assets/logo-pkwu.png"
+                contain
+                position="center right"
+                height="100%"
+            ></v-img>
+        </div>
+        <div style="height: 80vh">
+            <v-layout
+                row wrap align-center style="height: 80%"
+                fill-height 
+                v-if="isLoading"
             >
-                <slide 
-                    v-for="(item, i) in listDisplayed" 
-                    :key="`slide-${i}`"
-                    :index="i"
-                >
-                    <img :src="item.image" :alt="item.name">
-                </slide>
-            </carousel-3d>
-        </v-layout>
+                <v-flex xs12 class="text-xs-center">
+                    <v-progress-circular
+                        :size="100"
+                        :width="7"
+                        color="primary"
+                        indeterminate
+                    ></v-progress-circular>
+                </v-flex>
+            </v-layout>
+            <v-layout 
+                row wrap justify-center align-content-center 
+                fill-height style="height: 75%" v-else
+            >
+                <v-flex xs12 md5>
+                    <carousel-3d
+                        :autoplay="true"
+                        :autoplayHoverPause="true"
+                        :autoplayTimeout="4000"
+                        :clickable="false"
+                        display="5"
+                        border="0"
+                        width="650"
+                        height="500"
+                        @before-slide-change="getRandomMenu"
+                    >
+                        <slide 
+                            v-for="(item, i) in listDisplayed" 
+                            :key="`slide-${i}`"
+                            :index="i"
+                            class="rounded"
+                        >
+                            <img :src="item.image" :alt="item.name">
+                        </slide>
+                    </carousel-3d>
+                </v-flex>
+                <v-flex xs12 md7 class="pl-5">
+                    <v-layout
+                        row wrap
+                        align-content-center
+                        class="pl-3"
+                        style="height: 100%"
+                    >
+                        <v-flex xs12 class="mb-3">
+                            <div class="display-4 font-weight-black orange--text text--darken-1">
+                                {{ listDisplayed[currentIndex].name }}
+                            </div>
+                            <div class="display-3 font-weight-black grey--text text--darken-2">
+                                {{ $rupiahFormat(listDisplayed[currentIndex].price) }}
+                            </div>
+                        </v-flex>
+                        <template v-if="listDisplayed[currentIndex].units > 0">
+                            <v-flex xs12 class="mb-4">
+                                <h1 class="display-1 grey--text text--darken-2 font-weight-medium">
+                                    Stand {{ listDisplayed[currentIndex].stand.stand_name }}
+                                </h1>
+                            </v-flex>
+                            <v-flex xs12>
+                                <h1 class="display-1 grey--text text--darken-1">
+                                    {{ listDisplayed[currentIndex].units }} tersisa
+                                </h1>
+                            </v-flex>
+                        </template>
+                        <template v-else>
+                            <v-flex xs12 class="mb-4">
+                                <h1 class="display-2 red--text font-weight-bold">
+                                    Habis!
+                                </h1>
+                            </v-flex>
+                        </template>
+                    </v-layout>
+                </v-flex>
+            </v-layout>
+        </div>
     </div>
 </template>
 <script>
