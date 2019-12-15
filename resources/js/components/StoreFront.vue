@@ -53,15 +53,17 @@ export default {
         isLoading: true,
         listAll: [],
         listDisplayed: [],
+        currentIndex: 0,
     }),
     methods: {
         getRandomMenu(index) {
             // pick random menu from list and swap it
             if(this.listAll.length > 0) {
+                this.currentIndex = index;
                 const rand = Math.floor(Math.random() * this.listAll.length);
                 
                 // unseenIdx: index of a slide that is still invisible/unseen
-                const unseenIdx = (index + 3) % this.listDisplayed.length;
+                const unseenIdx = (this.currentIndex + 3) % this.listDisplayed.length;
 
                 const currentUnseen = this.listDisplayed[unseenIdx];
                 const swapped = this.listAll.splice(rand, 1, currentUnseen);
@@ -74,7 +76,7 @@ export default {
         .then(res => {
             this.isLoading = false;
             this.listAll = res.data;
-            for(let i=0; i<8; i++) {
+            for(let i=0; i<7; i++) {
                 if(this.listAll <= 0) break;
                 const rand = Math.floor(Math.random() * this.listAll.length);
                 this.listDisplayed.push(res.data[rand]);
