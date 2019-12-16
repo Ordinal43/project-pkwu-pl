@@ -112,18 +112,18 @@ export default {
     methods: {
         getRandomMenu(index) {
             // pick random menu from list and swap it
+            this.currentIndex = index;
             if(this.listAll.length > 0) {
-                this.currentIndex = index;
                 const rand = Math.floor(Math.random() * this.listAll.length);
-                
+
                 // unseenIdx: index of a slide that is still invisible/unseen
                 const unseenIdx = (this.currentIndex + Math.floor(this.listDisplayed.length/2)) % this.listDisplayed.length;
-
                 const currentUnseen = this.listDisplayed[unseenIdx];
                 const swapped = this.listAll.splice(rand, 1, currentUnseen);
                 this.listDisplayed[unseenIdx] = swapped[0];
+                console.log("currentFUnseen: " + this.unseenIdx);
             }
-            console.log(...this.listDisplayed.map(item => item.name));
+            console.log(...this.listDisplayed.map(item => item.name));         
         },
     },
     mounted() {
@@ -136,6 +136,7 @@ export default {
                 const rand = Math.floor(Math.random() * this.listAll.length);
                 this.listDisplayed.push(res.data[rand]);
                 this.listAll.splice(rand, 1);
+                console.log(this.listAll)
             }
         })
         .catch(err => {
