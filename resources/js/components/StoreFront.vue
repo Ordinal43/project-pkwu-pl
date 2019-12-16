@@ -59,21 +59,21 @@
                     >
                         <v-flex xs12 class="mb-3">
                             <div class="display-4 font-weight-black orange--text text--darken-1">
-                                {{ listDisplayed[currentIndex].name }}
+                                {{ getCurrentItem.name }}
                             </div>
                             <div class="display-3 font-weight-black grey--text text--darken-2">
-                                {{ $rupiahFormat(listDisplayed[currentIndex].price) }}
+                                {{ $rupiahFormat(getCurrentItem.price) }}
                             </div>
                         </v-flex>
-                        <template v-if="listDisplayed[currentIndex].units > 0">
+                        <template v-if="getCurrentItem.units > 0">
                             <v-flex xs12 class="mb-4">
                                 <h1 class="display-1 grey--text text--darken-2 font-weight-medium">
-                                    Stand {{ listDisplayed[currentIndex].stand.stand_name }}
+                                    Stand {{ getCurrentItem.stand.stand_name }}
                                 </h1>
                             </v-flex>
                             <v-flex xs12>
                                 <h1 class="display-1 grey--text text--darken-1">
-                                    {{ listDisplayed[currentIndex].units }} tersisa
+                                    {{ getCurrentItem.units }} tersisa
                                 </h1>
                             </v-flex>
                         </template>
@@ -104,6 +104,11 @@ export default {
         listDisplayed: [],
         currentIndex: 0,
     }),
+    computed: {
+        getCurrentItem() {
+            return this.listDisplayed[this.currentIndex];
+        }
+    },
     methods: {
         getRandomMenu(index) {
             // pick random menu from list and swap it
@@ -112,12 +117,13 @@ export default {
                 const rand = Math.floor(Math.random() * this.listAll.length);
                 
                 // unseenIdx: index of a slide that is still invisible/unseen
-                const unseenIdx = (this.currentIndex + 3) % this.listDisplayed.length;
+                const unseenIdx = (this.currentIndex + Math.floor(this.listDisplayed.length/2)) % this.listDisplayed.length;
 
                 const currentUnseen = this.listDisplayed[unseenIdx];
                 const swapped = this.listAll.splice(rand, 1, currentUnseen);
                 this.listDisplayed[unseenIdx] = swapped[0];
             }
+            console.log(...this.listDisplayed.map(item => item.name));
         },
     },
     mounted() {
